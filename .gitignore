@@ -1,0 +1,31 @@
+# File da non committare su GitHub
+
+# Variabili d'ambiente
+.env
+.env.local
+.env.production
+
+# File di configurazione con dati sensibili
+config/secrets.php
+config/local.php
+
+# Log files
+*.log
+logs/
+
+# Cache
+cache/
+tmp/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+scopus.php
+includes/api_key.php
