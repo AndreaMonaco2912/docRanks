@@ -25,6 +25,18 @@ class AuthorProcessor
         $this->mysqli = $mysqli;
     }
 
+    public function processAuthorCompleteByPid(string $scopusId, string $dblpPid): bool
+    {
+        try {
+            $authorInfo = getAuthorNameFromPid(trim($dblpPid));
+
+            return $this->processAuthorComplete($scopusId, $authorInfo['name'], $authorInfo['surname']);
+        } catch (Exception $e) {
+            error_log("Errore processAuthorCompleteByPid: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function processAuthorComplete(string $scopusId, string $name, string $surname): bool
     {
         $this->authorRepository = new AuthorRepository($this->mysqli, $scopusId);

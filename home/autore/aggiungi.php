@@ -9,21 +9,27 @@ $result = null;
 $scopus_id = '';
 $name = '';
 $surname = '';
+$dblp_pid = '';
+$search_method = '';
 $processAuthor = new AuthorProcessor($mysqli);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $scopus_id = trim($_POST['scopus_id'] ?? '');
-    $name = trim($_POST['name'] ?? '');
-    $surname = trim($_POST['surname'] ?? '');
-
+    $search_method = $_POST['search_method'] ?? 'name';
+    $result = false;
     if (!empty($scopus_id) && is_numeric($scopus_id)) {
-        if (!empty($name) && !empty($surname)) {
-            $result = $processAuthor->processAuthorComplete($scopus_id, $name, $surname);
-        } else {
-            $result = false;
+        if ($search_method === 'name') {
+            $name = trim($_POST['name'] ?? '');
+            $surname = trim($_POST['surname'] ?? '');
+            if (!empty($name) && !empty($surname)) {
+                $result = $processAuthor->processAuthorComplete($scopus_id, $name, $surname);
+            }
+        } else if ($search_method === 'pid') {
+            $dblp_pid = trim($_POST['dblp_pid'] ?? '');
+            if (!empty($dblp_pid)) {
+                $result = $processAuthor->processAuthorCompleteByPid($scopus_id, $dblp_pid);
+            }
         }
-    } else {
-        $result = false;
     }
 }
 ?>
@@ -60,22 +66,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 pattern="[0-9]+"
                 title="Inserisci solo numeri"
                 required>
+            <div id="name-fields">
+                <label for="name">Nome autore:</label>
+                <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($name); ?>" placeholder="Es: Mario">
 
-            <label for="name">Nome autore (obbligatorio):</label>
-            <input type="text"
-                id="name"
-                name="name"
-                value="<?php echo htmlspecialchars($name); ?>"
-                placeholder="Es: Mario"
-                required>
+                <label for="surname">Cognome autore:</label>
+                <input type="text" id="surname" name="surname" value="<?php echo htmlspecialchars($surname); ?>" placeholder="Es: Rossi">
+            </div>
 
-            <label for="surname">Cognome autore (obbligatorio):</label>
-            <input type="text"
-                id="surname"
-                name="surname"
-                value="<?php echo htmlspecialchars($surname); ?>"
-                placeholder="Es: Rossi"
-                required>
+            <div id="pid-field" style="display: none;">
+                <label for="dblp_pid">DBLP PID:</label>
+                <input type="text" id="dblp_pid" name="dblp_pid" value="<?php echo htmlspecialchars($dblp_pid); ?>" placeholder="Es: 199/0048">
+            </div>
+
+            <label>
+                <input type="radio" name="search_method" value="name" checked onchange="toggleFields()"> Usa Nome e Cognome
+            </label>
+            <label>
+                <input type="radio" name="search_method" value="pid" onchange="toggleFields()"> Usa DBLP PID
+            </label>
+
+            <script>
+                function toggleFields() {
+                    const method = document.querySelector('input[name="search_method"]:checked').value;
+                    const nameFields = document.getElementById('name-fields');
+                    const pidField = document.getElementById('pid-field');
+
+                    if (method === 'name') {
+                        nameFields.style.display = 'block';
+                        pidField.style.display = 'none';
+                        document.getElementById('name').required = true;
+                        document.getElementById('surname').required = true;
+                        document.getElementById('dblp_pid').required = false;
+                    } else {
+                        nameFields.style.display = 'none';
+                        pidField.style.display = 'block';
+                        document.getElementById('name').required = false;
+                        document.getElementById('surname').required = false;
+                        document.getElementById('dblp_pid').required = true;
+                    }
+                }
+                toggleFields();
+            </script>
 
             <button type="submit">Importa Autore</button>
         </form>
