@@ -67,7 +67,7 @@ handleHIndexUpdate($mysqli, $scopus_id);
 
                             <div id="form_hindex_<?php echo md5($author['scopus_id']); ?>" style="display: none;">
                                 <form method="post" style="display: inline;">
-                                    <label for="hindex_input_<?php echo $id_suffix; ?>">H-Index</label>
+                                    <label for="hindex_input_<?php echo md5($author['scopus_id']); ?>">H-Index</label>
                                     <input type="number" step="0.1" name="new_hindex"
                                         id="hindex_input_<?php echo $id_suffix; ?>"
                                         value="<?php echo htmlspecialchars($author['h_index'] ?? ''); ?>"
