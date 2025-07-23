@@ -1,0 +1,31 @@
+services:
+  db:
+    image: mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+    ports:
+      - 3306:3306
+    volumes:
+      - data_db:/var/lib/mysql
+      - ./sql/docranks.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 9090:80
+    environment:
+      - PMA_ARBITRARY=1
+    depends_on:
+      - db
+
+  server:
+    build: .
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+
+volumes:
+  data_db:
