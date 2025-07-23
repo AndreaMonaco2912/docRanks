@@ -24,9 +24,9 @@ function importScimagoJR($mysqli): bool
         }
 
         if (($handle = fopen($filename, 'r')) !== FALSE) {
-            fgetcsv($handle, 1000, ";");
+            fgetcsv($handle, 1000, ";", '"', "\\");
 
-            while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ";", '"', "\\")) !== FALSE) {
                 if (count($data) < 24) continue;
 
                 [

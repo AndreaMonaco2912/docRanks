@@ -15,7 +15,7 @@ function processScopus($mysqli, $file_path, $anno)
         return 0;
     }
 
-    $header = fgetcsv($handle);
+    $header = fgetcsv($handle, 0, ",", '"', "\\");
     if ($header === FALSE) {
         echo "Errore nella lettura dell'header del file: $file_path<br>";
         fclose($handle);
@@ -45,7 +45,7 @@ function processScopus($mysqli, $file_path, $anno)
         return 0;
     }
 
-    while (($row = fgetcsv($handle)) !== FALSE) {
+    while (($row = fgetcsv($handle, 0, ",", '"', "\\")) !== FALSE) {
         $source_title = trim($row[$source_index] ?? '');
         $citescore = trim($row[$citescore_index] ?? '');
         $snip = trim($row[$snip_index] ?? '');

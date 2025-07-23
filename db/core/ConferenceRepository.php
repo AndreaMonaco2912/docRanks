@@ -101,7 +101,7 @@ class ConferenceRepository
             if (($handle = fopen($filepath, "r")) !== false) {
                 $processed_rows = 0;
 
-                while (($data = fgetcsv($handle)) !== false) {
+                while (($data = fgetcsv($handle, 0, ",", '"', "\\")) !== false) {
                     if (count($data) < 5) continue;
 
                     $title = trim($data[1]);
