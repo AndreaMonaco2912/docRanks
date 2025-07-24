@@ -300,26 +300,26 @@ erDiagram
     }
 
     %% Relazioni
-    INFORMAZIONI_AUTORI }|--|| AUTORI : "ha info annuali"
+    INFORMAZIONI_AUTORI }|--|| AUTORI : "info annuali per"
     AUTORI ||--o{ REDAZIONE : "redige"
     AUTORI ||--o{ PARTECIPAZIONE : "partecipa"
     AUTORI ||--o{ PUBBLICAZIONE_ALTRO : "pubblica"
 
-    PUBBLICAZIONE_ALTRO }o--|| OTHERS : "pubblicato da"
+    PUBBLICAZIONE_ALTRO }o--|| OTHERS : "ha pubblicato"
 
     REDAZIONE }o--|| ARTICOLI : "redatto da"
-    ARTICOLI }o..o| RIVISTE : "pubblica"
+    ARTICOLI }o..o| RIVISTE : "pubblicato su"
     RIVISTE ||--|{ INFORMAZIONI_RIVISTE : "ha metriche annuali"
-    RIVISTE ||--o{ QUARTILI : "ha quartili"
-    SPECIALIZZAZIONI_AREA }o--|| AREE : "copre"
-    CATEGORIE }o--|| AREE : "contiene"
-    QUARTILI }o--|| CATEGORIE : "valuta"
-    SPECIALIZZAZIONI_CATEGORIE }o--|| CATEGORIE : "include"
+    RIVISTE ||--o{ QUARTILI : "ha valore"
+    SPECIALIZZAZIONI_AREA }o--|| AREE : ""
+    CATEGORIE }o--|| AREE : "è contienuta in"
+    QUARTILI }o--|| CATEGORIE : "appartiene a"
+    SPECIALIZZAZIONI_CATEGORIE }o--|| CATEGORIE : ""
     RIVISTE ||--o{ SPECIALIZZAZIONI_AREA : "specializzata in"
     RIVISTE ||--o{ SPECIALIZZAZIONI_CATEGORIE : "specializzata in"
 
     CONFERENZE |o..o{ ATTI_DI_CONVEGNO : "ospita"
-    CONFERENZE ||--|{ INFO_CONF : "ha ranking"
-    RANKING_1 |o..o{ INFO_CONF : "classifica"
-    ATTI_DI_CONVEGNO ||--o{ PARTECIPAZIONE : "include"
+    CONFERENZE ||--|{ INFO_CONF : "ha info"
+    RANKING_1 |o..o{ INFO_CONF : "ha ranking"
+    ATTI_DI_CONVEGNO ||--o{ PARTECIPAZIONE : "include autore"
 ```
