@@ -128,7 +128,7 @@ class AuthorProcessor
         if (!$acronym) {
             throw new Exception("Impossibile creare conferenza per: {$pub['venue']}");
         }
-        $paperData = prepareConferencePaperData($pub, $this->scopusData->pub_doi[$doi] ?? []);
+        $paperData = prepareConferencePaperData($pub, $this->scopusData->getPublicationData($doi) ?? []);
         $paperData['acronimo'] = $acronym;
 
         if (!$this->paperRepository->insert($paperData)) {
@@ -149,9 +149,15 @@ class AuthorProcessor
             return;
         }
 
-        $journalId = $this->journalRepository->getJournalByVenue($pub['venue']);
-        
-        $articleData = prepareArticleData($pub, $this->scopusData->pub_doi[$doi] ?? []);
+        $scopusData = $this->scopusData->getPublicationData($doi);
+        $journalId = null;
+        if ($scopusData && !empty($scopusData['source_id'])) {
+            $journalId = $scopusData['source_id'];
+        } else {
+            $journalId = $this->journalRepository->getJournalByVenue($pub['venue']);
+        }
+
+        $articleData = prepareArticleData($pub, $scopusData ?? []);
         $articleData['id'] = $journalId;
 
         if (!$this->articleRepository->insert($articleData)) {

@@ -4,14 +4,14 @@ define('SCOPUS_RATE_LIMIT_DELAY', 1);
 class ScopusAuthorData
 {
     private string $api_key;
-    private string $base_url = 'https://api.elsevier.com/content/';
+    private string $url = 'https://api.elsevier.com/content/search/scopus';
     public string $scopus_id;
 
-    /** @var array<string, array{scopus_id: ?string, citation: ?int}> */
-    public array $pub_doi = [];
+    /** @var array<string, array{scopus_id: ?string, citation: ?int, source_id: ?string}> */
+    private array $pub_doi = [];
 
     /** @var array<int, array{documents: int, citation: int}> */
-    public array $year_data = [];
+    private array $year_data = [];
 
     public function __construct(string $api_key)
     {
@@ -32,13 +32,12 @@ class ScopusAuthorData
 
     private function loadPub(string $scopus_id): bool
     {
-        $url = $this->base_url . "search/scopus";
         $query = "AU-ID({$scopus_id})";
         $start = 0;
         $count = 25;
 
         do {
-            $response = $this->fetchPublicationBatch($url, $query, $start, $count);
+            $response = $this->fetchPublicationBatch($query, $start, $count);
             if (!$response) {
                 break;
             }
@@ -63,7 +62,7 @@ class ScopusAuthorData
         return true;
     }
 
-    private function fetchPublicationBatch(string $url, string $query, int $start, int $count): false|string
+    private function fetchPublicationBatch(string $query, int $start, int $count): false|string
     {
         $params = [
             'query' => $query,
@@ -71,10 +70,10 @@ class ScopusAuthorData
             'count' => $count,
             'sort' => 'pubyear',
             'view' => 'STANDARD',
-            'field' => 'doi,citedby-count,coverDate,prism:publicationName,dc:identifier'
+            'field' => 'doi,citedby-count,source-id,eid'
         ];
 
-        $full_url = $url . '?' . http_build_query($params);
+        $full_url = $this->url . '?' . http_build_query($params);
         $headers = [
             "X-ELS-APIKey: {$this->api_key}",
             "Accept: application/json",
@@ -91,29 +90,22 @@ class ScopusAuthorData
             return;
         }
 
-        $doi = $entry['prism:doi'];
-        $citation = (int)($entry['citedby-count'] ?? 0);
-        $scopus_pub_id = $entry['dc:identifier'] ?? null;
+        $doi = strtoupper($entry['prism:doi']);
+        $scopus_pub_id = $entry['eid'] ?? null;
 
-        $this->pub_doi[$doi] = [
-            'scopus_id' => $scopus_pub_id ?: null,
-            'citation' => $scopus_pub_id ? $citation : null
-        ];
+        if ($scopus_pub_id) {
+            $citation = isset($entry['citedby-count'])
+                ? (int)$entry['citedby-count']
+                : null;
 
-        if (!empty($entry['prism:coverDate'])) {
-            $anno = (int)substr($entry['prism:coverDate'], 0, 4);
-            $this->updateYearStats($anno, $citation);
+            $source_id = $entry['source-id'] ?? null;
+
+            $this->pub_doi[$doi] = [
+                'scopus_id' => $scopus_pub_id,
+                'citation' => $citation,
+                'source_id' => $source_id
+            ];
         }
-    }
-
-    private function updateYearStats(int $anno, int $citation): void
-    {
-        if (!isset($this->year_data[$anno])) {
-            $this->year_data[$anno] = ['documents' => 0, 'citation' => 0];
-        }
-
-        $this->year_data[$anno]['documents']++;
-        $this->year_data[$anno]['citation'] += $citation;
     }
 
     /** @param string[] $headers */
@@ -148,6 +140,11 @@ class ScopusAuthorData
     public function getCitation(): int
     {
         return array_sum(array_map(fn($d) => $d['citation'] ?? 0, $this->pub_doi));
+    }
+
+    public function getPublicationData(string $doi): ?array
+    {
+        return $this->pub_doi[$doi] ?? null;
     }
 
     /** @return array<int, array{documents: int, citation: int}> */
