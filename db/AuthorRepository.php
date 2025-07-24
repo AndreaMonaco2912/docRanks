@@ -221,4 +221,28 @@ class AuthorRepository
 
         return $success;
     }
+
+    public function insertOtherPublication(string $doi): void
+    {
+        $stmt = $this->mysqli->prepare("INSERT IGNORE INTO PUBBLICAZIONE_ALTRO (DOI, scopus_id) VALUES (?, ?)");
+        if (!$stmt) return;
+
+        $stmt->bind_param("ss", $doi, $this->scopusId);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    public function otherPublicationExists(string $doi): bool
+    {
+        $stmt = $this->mysqli->prepare("SELECT 1 FROM PUBBLICAZIONE_ALTRO WHERE DOI = ? AND scopus_id = ?");
+        if (!$stmt) return false;
+
+        $stmt->bind_param("ss", $doi, $this->scopusId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $exists = $result->num_rows > 0;
+        $stmt->close();
+
+        return $exists;
+    }
 }

@@ -37,10 +37,10 @@ handleHIndexUpdate($mysqli, $scopus_id);
     <h1>DocRanks - Profilo Autore</h1>
 
     <?php include '../../includes/search_bar.php'; ?>
-    <main>
-        <?php if ($author_exists): ?>
-            <?php $author = $authorRepository->getProfile(); ?>
 
+    <?php if ($author_exists): ?>
+        <?php $author = $authorRepository->getProfile(); ?>
+        <main>
             <h2>Profilo Completo</h2>
 
             <section>
@@ -163,23 +163,25 @@ handleHIndexUpdate($mysqli, $scopus_id);
                     </table>
                 </section>
             <?php endif; ?>
-
-            <footer>
-                <h3>Azioni</h3>
-                <p>
-                    <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Conference Papers</a><br>
-                    <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Journal Articles</a><br>
-                    <a href="aggiungi.php">Aggiungi altro autore</a>
-                </p>
-            </footer>
-
-        <?php elseif (!empty($scopus_id)): ?>
-            <h3>Autore Non Trovato</h3>
-            <p>L'autore con Scopus ID <strong><?php echo htmlspecialchars($scopus_id); ?></strong> non è presente nel database.</p>
+        </main>
+        <footer>
+            <h3>Azioni</h3>
             <p>
-                <a href="aggiungi.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Aggiungi questo autore al database</a>
+                <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Conference Papers</a><br>
+                <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Journal Articles</a><br>
+                <a href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutte le Altre Pubblicazioni</a><br>
+                <a href="aggiungi.php">Aggiungi altro autore</a>
             </p>
-        <?php else: ?>
+        </footer>
+
+    <?php elseif (!empty($scopus_id)): ?>
+        <h3>Autore Non Trovato</h3>
+        <p>L'autore con Scopus ID <strong><?php echo htmlspecialchars($scopus_id); ?></strong> non è presente nel database.</p>
+        <p>
+            <a href="aggiungi.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Aggiungi questo autore al database</a>
+        </p>
+    <?php else: ?>
+        <main>
             <h2>Tutti gli Autori</h2>
 
             <?php
@@ -209,9 +211,9 @@ handleHIndexUpdate($mysqli, $scopus_id);
                     <?php endforeach; ?>
                 </tbody>
             </table>
-        <?php endif; ?>
+        </main>
+    <?php endif; ?>
 
-    </main>
 
     <?php renderEditingJavaScript(); ?>
 

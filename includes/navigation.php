@@ -11,7 +11,9 @@ function renderNavigation($scopus_id, $current_page = '')
         <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
             <?php echo $current_page === 'conferences' ? 'style="font-weight: bold;"' : ''; ?>>Conference Papers</a> |
         <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
-            <?php echo $current_page === 'journals' ? 'style="font-weight: bold;"' : ''; ?>>Journal Articles</a>
+            <?php echo $current_page === 'journals' ? 'style="font-weight: bold;"' : ''; ?>>Journal Articles</a> |
+        <a href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
+            <?php echo $current_page === 'others' ? 'style="font-weight: bold;"' : ''; ?>>Altre Pubblicazioni</a>
     </nav>
 <?php
 }
@@ -92,6 +94,9 @@ function renderActions($scopus_id, $current_page)
             <?php endif; ?>
             <?php if ($current_page !== 'journals'): ?>
                 <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">📑 Visualizza Journal Articles</a>
+            <?php endif; ?>
+            <?php if ($current_page !== 'others'): ?>
+                <a href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>">📚 Visualizza Altre Pubblicazioni</a>
             <?php endif; ?>
         </p>
     </footer>

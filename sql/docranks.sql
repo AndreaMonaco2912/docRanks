@@ -3,7 +3,7 @@
 -- *--------------------------------------------
 -- * DB-MAIN version: 11.0.2              
 -- * Generator date: Sep 14 2021              
--- * Generation date: Thu Jul 24 11:00:33 2025 
+-- * Generation date: Thu Jul 24 12:36:46 2025 
 -- * LUN file: C:\Users\andre\Pictures\TESIDILAUREA.lun 
 -- * Schema: docranks/8 
 -- ********************************************* 
@@ -94,6 +94,15 @@ create table INFORMAZIONI_RIVISTE (
      CiteScore float(1),
      constraint ID_INFORMAZIONI_RIVISTE_ID primary key (id, anno));
 
+create table OTHERS (
+     titolo varchar(200) not null,
+     nome_autori varchar(300) not null,
+     anno int not null,
+     dblp_venue varchar(50) not null,
+     tipo varchar(100) not null,
+     DOI varchar(100) not null,
+     constraint ID_OTHERS_ID primary key (DOI));
+
 create table PARTECIPAZIONE (
      DOI varchar(100) not null,
      scopus_id char(20) not null,
@@ -105,6 +114,11 @@ create table QUARTILI (
      valore int not null,
      anno int not null,
      constraint ID_QUARTILI_ID primary key (id, nome_categoria, anno));
+
+create table PUBBLICAZIONE_ALTRO (
+     scopus_id char(20) not null,
+     DOI varchar(100) not null,
+     constraint ID_PUBBLICAZIONE_ALTRO_ID primary key (DOI, scopus_id));
 
 create table RANKING_1 (
      valore char(2) not null,
@@ -118,7 +132,6 @@ create table REDAZIONE (
 create table RIVISTE (
      id varchar(50) not null,
      nome varchar(100) not null,
-     link_rivista varchar(100) not null,
      publisher varchar(20) not null,
      issn varchar(40) not null,
      constraint ID_RIVISTE_ID primary key (id));
@@ -190,6 +203,14 @@ alter table QUARTILI add constraint FKOTTIENE
 alter table QUARTILI add constraint FKCORRISPONDENZA_FK
      foreign key (nome_categoria)
      references CATEGORIE (nome_categoria);
+
+alter table PUBBLICAZIONE_ALTRO add constraint FKPUB_OTH
+     foreign key (DOI)
+     references OTHERS (DOI);
+
+alter table PUBBLICAZIONE_ALTRO add constraint FKPUB_AUT_FK
+     foreign key (scopus_id)
+     references AUTORI (scopus_id);
 
 alter table REDAZIONE add constraint FKRED_AUT_FK
      foreign key (scopus_id)
@@ -263,6 +284,9 @@ create unique index ID_INFORMAZIONI_AUTORI_IND
 create unique index ID_INFORMAZIONI_RIVISTE_IND
      on INFORMAZIONI_RIVISTE (id, anno);
 
+create unique index ID_OTHERS_IND
+     on OTHERS (DOI);
+
 create unique index ID_PARTECIPAZIONE_IND
      on PARTECIPAZIONE (DOI, scopus_id);
 
@@ -274,6 +298,12 @@ create unique index ID_QUARTILI_IND
 
 create index FKCORRISPONDENZA_IND
      on QUARTILI (nome_categoria);
+
+create unique index ID_PUBBLICAZIONE_ALTRO_IND
+     on PUBBLICAZIONE_ALTRO (DOI, scopus_id);
+
+create index FKPUB_AUT_IND
+     on PUBBLICAZIONE_ALTRO (scopus_id);
 
 create unique index ID_RANKING_1_IND
      on RANKING_1 (valore);

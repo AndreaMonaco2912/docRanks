@@ -9,6 +9,7 @@ require_once dirname(__DIR__) . '/db/JournalRepository.php';
 require_once dirname(__DIR__) . '/db/core/ConferenceRepository.php';
 require_once dirname(__DIR__) . '/includes/publication_parser.php';
 require_once dirname(__DIR__) . '/includes/env_loader.php';
+require_once dirname(__DIR__) . '/db/publication/OthersRepository.php';
 
 class AuthorProcessor
 {
@@ -19,6 +20,7 @@ class AuthorProcessor
     private ArticleRepository $articleRepository;
     private ConferenceRepository $conferenceRepository;
     private JournalRepository $journalRepository;
+    private OthersRepository $othersRepository;
 
     public function __construct(mysqli $mysqli)
     {
@@ -44,6 +46,7 @@ class AuthorProcessor
         $this->articleRepository = new ArticleRepository($this->mysqli);
         $this->conferenceRepository = new ConferenceRepository($this->mysqli);
         $this->journalRepository = new JournalRepository($this->mysqli);
+        $this->othersRepository = new OthersRepository($this->mysqli);
 
         try {
             if (empty($_ENV['SCOPUS_API_KEY'])) {
@@ -106,11 +109,42 @@ class AuthorProcessor
                     $this->processConferencePaper($pub);
                 } elseif ($pub['type'] === 'Journal Articles') {
                     $this->processJournalArticle($pub);
+                } else {
+                    $this->processOtherPublication($pub);
                 }
             } catch (Exception $e) {
                 error_log("Errore pubblicazione '{$pub['title']}': " . $e->getMessage());
             }
         }
+    }
+
+    private function processOtherPublication(array $pub): void
+    {
+        $doi = $pub['doi'];
+
+        if ($this->othersRepository->existsByDoi($doi)) {
+            if (!$this->authorRepository->otherPublicationExists($doi)) {
+                $this->authorRepository->insertOtherPublication($doi);
+            }
+            return;
+        }
+
+        $authors_string = implode(', ', $pub['authors']);
+
+        $otherData = [
+            'titolo' => $pub['title'],
+            'nome_autori' => $authors_string,
+            'anno' => $pub['year'],
+            'dblp_venue' => $pub['venue'],
+            'tipo' => $pub['type'],
+            'DOI' => $doi
+        ];
+
+        if (!$this->othersRepository->insert($otherData)) {
+            throw new Exception("Errore inserimento altra pubblicazione");
+        }
+
+        $this->authorRepository->insertOtherPublication($doi);
     }
 
     private function processConferencePaper(array $pub): void
