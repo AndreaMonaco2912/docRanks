@@ -1,5 +1,4 @@
 <?php
-
 class PublicationRepository
 {
     private mysqli $mysqli;
@@ -14,16 +13,13 @@ class PublicationRepository
     public function existsByDoi(string $doi): bool
     {
         $stmt = $this->mysqli->prepare("SELECT DOI FROM {$this->tableName} WHERE DOI = ?");
-        if (!$stmt) {
-            return false;
-        }
+        if (!$stmt) return false;
 
         $stmt->bind_param("s", $doi);
         $stmt->execute();
         $result = $stmt->get_result();
         $exists = $result->num_rows > 0;
         $stmt->close();
-
         return $exists;
     }
 
@@ -35,28 +31,14 @@ class PublicationRepository
     public function insertPublication(array $data, string $lastColumnName): bool
     {
         $efwci = $this->calculateEfwci($data['citation_count']);
-
         $isArticle = ($this->tableName === 'ARTICOLI');
 
-        $baseFields = "titolo, anno, numero_autori, DOI, nome_autori, EFWCI, FWCI, citation_count, scopus_id";
-        $basePlaceholders = "?, ?, ?, ?, ?, ?, ?, ?, ?";
-        $baseTypes = "siissddis";
+        $venueColumn = $isArticle ? 'dblpRivista' : 'acronimo_dblp';
+        $venueValue = $isArticle ? $data['dblpRivista'] : $data['acronimo_dblp'];
 
-        if ($isArticle) {
-            $fields = "{$baseFields}, dblpRivista, {$lastColumnName}";
-            $placeholders = "{$basePlaceholders}, ?, ?";
-            $types = "{$baseTypes}ss";
-        } else {
-            $fields = "{$baseFields}, acronimo_dblp, {$lastColumnName}";
-            $placeholders = "{$basePlaceholders}, ?, ?";
-            $types = "{$baseTypes}ss";
-        }
-
-        $stmt = $this->mysqli->prepare("
-        INSERT INTO {$this->tableName} ({$fields}) VALUES ({$placeholders})
-    ");
-
-        if (!$stmt) return false;
+        $fields = "titolo, anno, numero_autori, DOI, nome_autori, EFWCI, FWCI, citation_count, scopus_id, {$venueColumn}, {$lastColumnName}";
+        $placeholders = "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+        $types = "siissddisss";
 
         $values = [
             $data['titolo'],
@@ -67,20 +49,17 @@ class PublicationRepository
             $efwci,
             $data['FWCI'],
             $data['citation_count'],
-            $data['scopus_id']
+            $data['scopus_id'],
+            $venueValue,
+            $data[$lastColumnName]
         ];
 
-        if ($isArticle) {
-            $values[] = $data['dblpRivista'];
-        } else {
-            $values[] = $data['acronimo_dblp'];
-        }
-        $values[] = $data[$lastColumnName];
+        $stmt = $this->mysqli->prepare("INSERT INTO {$this->tableName} ({$fields}) VALUES ({$placeholders})");
+        if (!$stmt) return false;
 
         $stmt->bind_param($types, ...$values);
         $success = $stmt->execute();
         $stmt->close();
-
         return $success;
     }
 
@@ -92,7 +71,6 @@ class PublicationRepository
         $stmt->bind_param("ds", $fwci, $doi);
         $success = $stmt->execute();
         $stmt->close();
-
         return $success;
     }
 }
