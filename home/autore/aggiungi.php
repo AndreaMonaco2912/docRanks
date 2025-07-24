@@ -149,10 +149,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <details>
                 <summary>Formato file JSON</summary>
-                <pre>[
-                    {"scopus_id": "57193867382", "name": "Giovanni", "surname": "Delnevo"},  
-                    {"scopus_id": "55546765500", "name": "Roberto", "surname": "Girau"}
-                    ]
+                <pre>
+[
+    {"scopus_id": "57193867382", "name": "Giovanni", "surname": "Delnevo"},  
+    {"scopus_id": "55546765500", "name": "Roberto", "surname": "Girau"}
+]
                 </pre>
             </details>
         </section>
