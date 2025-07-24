@@ -3,7 +3,7 @@
 -- *--------------------------------------------
 -- * DB-MAIN version: 11.0.2              
 -- * Generator date: Sep 14 2021              
--- * Generation date: Thu Jul 24 12:36:46 2025 
+-- * Generation date: Thu Jul 24 16:45:47 2025 
 -- * LUN file: C:\Users\andre\Pictures\TESIDILAUREA.lun 
 -- * Schema: docranks/8 
 -- ********************************************* 
@@ -56,14 +56,13 @@ create table AUTORI (
      cognome varchar(20) not null,
      scopus_id char(20) not null,
      h_index float(1),
-     numero_riviste int not null,
      numero_citazioni int not null,
      numero_documenti int not null,
      constraint ID_AUTORI_ID primary key (scopus_id));
 
 create table CATEGORIE (
      nome_categoria varchar(50) not null,
-     nome_area varchar(50),
+     nome_area varchar(50) not null,
      constraint ID_CATEGORIE_ID primary key (nome_categoria));
 
 create table CONFERENZE (
@@ -166,11 +165,6 @@ alter table ATTI_DI_CONVEGNO add constraint FKAPPARTENENZA_A_C_FK
 alter table CATEGORIE add constraint FKSOTTOCASTEGORIA_FK
      foreign key (nome_area)
      references AREE (nome_area);
-
--- Not implemented
--- alter table CONFERENZE add constraint ID_CONFERENZE_CHK
---     check(exists(select * from ATTI_DI_CONVEGNO
---                  where ATTI_DI_CONVEGNO.acronimo = acronimo)); 
 
 alter table INFO_CONF add constraint FKRANK_CONF_1_FK
      foreign key (valore)

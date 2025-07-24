@@ -129,18 +129,17 @@ class AuthorRepository
 
     private function insertAuthor(array $dati): bool
     {
-        $query = "INSERT INTO AUTORI (nome, cognome, scopus_id, h_index, numero_riviste, numero_citazioni, numero_documenti) 
-              VALUES (?, ?, ?, null, ?, ?, ?)";
+        $query = "INSERT INTO AUTORI (nome, cognome, scopus_id, h_index, numero_citazioni, numero_documenti) 
+              VALUES (?, ?, ?, null, ?, ?)";
 
         $stmt = $this->mysqli->prepare($query);
         if (!$stmt) return false;
 
         $stmt->bind_param(
-            "sssiii",
+            "sssii",
             $dati['nome'],
             $dati['cognome'],
             $dati['scopus_id'],
-            $dati['numero_riviste'],
             $dati['numero_citazioni'],
             $dati['numero_documenti']
         );
@@ -152,19 +151,15 @@ class AuthorRepository
 
     private function updateAuthor(array $dati): bool
     {
-        $query = "UPDATE AUTORI 
-              SET nome = ?, cognome = ?, numero_riviste = ?, 
-                  numero_citazioni = ?, numero_documenti = ? 
-              WHERE scopus_id = ?";
+        $query = "UPDATE AUTORI SET nome = ?, cognome = ?, numero_citazioni = ?, numero_documenti = ? WHERE scopus_id = ?";
 
         $stmt = $this->mysqli->prepare($query);
         if (!$stmt) return false;
 
         $stmt->bind_param(
-            "ssiiis",
+            "ssiis",
             $dati['nome'],
             $dati['cognome'],
-            $dati['numero_riviste'],
             $dati['numero_citazioni'],
             $dati['numero_documenti'],
             $dati['scopus_id']

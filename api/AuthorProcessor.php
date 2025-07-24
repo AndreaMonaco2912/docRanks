@@ -86,7 +86,6 @@ class AuthorProcessor
             'nome' => $name,
             'cognome' => $surname,
             'scopus_id' => $this->scopusData->scopus_id,
-            'numero_riviste' => 0,
             'numero_citazioni' => $this->scopusData->getCitation(),
             'numero_documenti' => $this->scopusData->getPub()
         ]);
