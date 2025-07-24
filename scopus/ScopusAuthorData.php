@@ -152,37 +152,4 @@ class ScopusAuthorData
     {
         return $this->year_data;
     }
-
-    public function debug(): void
-    {
-        echo "=== DEBUG DATI AUTORE ===\n";
-        echo "Scopus ID: {$this->scopus_id}\n";
-        echo "Totale pubblicazioni: " . $this->getPub() . "\n";
-        echo "Totale citation: " . $this->getCitation() . "\n";
-        echo "\nDati per anno:\n";
-        echo "\n=== DEBUG CALCOLI ===\n";
-        echo "Count pubblicazioni_doi: " . count($this->pub_doi) . "\n";
-        echo "Somma citation calcolata: " . $this->getCitation() . "\n";
-        echo "Anni con dati: " . count($this->year_data) . "\n";
-
-        foreach ($this->year_data as $anno => $dati) {
-            echo "  $anno: {$dati['documents']} documenti, {$dati['citation']} citation\n";
-        }
-
-        echo "\nPubblicazioni DOI (prime 5):\n";
-        $count = 0;
-        foreach ($this->pub_doi as $doi => $info) {
-            if ($count++ >= 5) {
-                break;
-            }
-            $scopus_id_display = $info['scopus_id'] ?? 'null';
-            $citation_display = $info['citation'] ?? 'null';
-            echo "  DOI: $doi - Scopus ID: $scopus_id_display - citation: $citation_display\n";
-        }
-
-        if (count($this->pub_doi) > 5) {
-            echo "  ... e altre " . (count($this->pub_doi) - 5) . " pubblicazioni\n";
-        }
-        echo "========================\n";
-    }
 }
