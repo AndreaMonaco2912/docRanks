@@ -2,6 +2,7 @@
 
 require_once '../../db/connection.php';
 require_once '../../db/AuthorRepository.php';
+require_once '../../db/AuthorsRepository.php';
 require_once '../../includes/publication_handlers.php';
 
 $scopus_id = isset($_GET['scopus_id']) ? trim($_GET['scopus_id']) : '';
@@ -178,6 +179,36 @@ handleHIndexUpdate($mysqli, $scopus_id);
             <p>
                 <a href="aggiungi.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Aggiungi questo autore al database</a>
             </p>
+        <?php else: ?>
+            <h2>Tutti gli Autori</h2>
+
+            <?php
+            $authorsRepo = new AuthorsRepository($mysqli);
+            $authors = $authorsRepo->getAllAuthors();
+            ?>
+            <table border="1">
+                <caption>Elenco completo degli autori presenti nel database</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Cognome</th>
+                        <th scope="col">Scopus ID</th>
+                        <th scope="col">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($authors as $author): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($author['nome']) ?></td>
+                            <td><?= htmlspecialchars($author['cognome']) ?></td>
+                            <td><?= htmlspecialchars($author['scopus_id']) ?></td>
+                            <td>
+                                <a href="?scopus_id=<?= urlencode($author['scopus_id']) ?>">Visualizza Profilo</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         <?php endif; ?>
 
     </main>
