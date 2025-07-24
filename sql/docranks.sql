@@ -3,9 +3,9 @@
 -- *--------------------------------------------
 -- * DB-MAIN version: 11.0.2              
 -- * Generator date: Sep 14 2021              
--- * Generation date: Fri Jul 18 15:13:58 2025 
+-- * Generation date: Thu Jul 24 11:00:33 2025 
 -- * LUN file: C:\Users\andre\Pictures\TESIDILAUREA.lun 
--- * Schema: docranks/7 
+-- * Schema: docranks/8 
 -- ********************************************* 
 
 
@@ -28,7 +28,7 @@ create table ARTICOLI (
      anno int not null,
      numero_autori int not null,
      DOI varchar(100) not null,
-     nome_autori varchar(150) not null,
+     nome_autori varchar(300) not null,
      EFWCI float(1),
      FWCI float(1),
      citation_count int,
@@ -42,7 +42,8 @@ create table ATTI_DI_CONVEGNO (
      anno int not null,
      numero_autori int not null,
      DOI varchar(100) not null,
-     nome_autori varchar(150) not null,
+     nome_autori varchar(300) not null,
+     acronimo_dblp varchar(100) not null,
      EFWCI float(1),
      FWCI float(1),
      citation_count int,

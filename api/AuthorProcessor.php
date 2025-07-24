@@ -124,10 +124,8 @@ class AuthorProcessor
             return;
         }
 
-        $acronym = $this->conferenceRepository->insertConferenceIfNotExists($pub['venue']);
-        if (!$acronym) {
-            throw new Exception("Impossibile creare conferenza per: {$pub['venue']}");
-        }
+        $acronym = $this->conferenceRepository->findConferenceByVenue($pub['venue']);
+        
         $paperData = prepareConferencePaperData($pub, $this->scopusData->getPublicationData($doi) ?? []);
         $paperData['acronimo'] = $acronym;
 

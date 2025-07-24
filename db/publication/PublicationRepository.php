@@ -47,9 +47,9 @@ class PublicationRepository
             $placeholders = "{$basePlaceholders}, ?, ?";
             $types = "{$baseTypes}ss";
         } else {
-            $fields = "{$baseFields}, {$lastColumnName}";
-            $placeholders = "{$basePlaceholders}, ?";
-            $types = "{$baseTypes}s";
+            $fields = "{$baseFields}, acronimo_dblp, {$lastColumnName}";
+            $placeholders = "{$basePlaceholders}, ?, ?";
+            $types = "{$baseTypes}ss";
         }
 
         $stmt = $this->mysqli->prepare("
@@ -72,6 +72,8 @@ class PublicationRepository
 
         if ($isArticle) {
             $values[] = $data['dblpRivista'];
+        } else {
+            $values[] = $data['acronimo_dblp'];
         }
         $values[] = $data[$lastColumnName];
 

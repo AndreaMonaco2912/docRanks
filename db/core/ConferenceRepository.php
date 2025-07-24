@@ -12,11 +12,10 @@ class ConferenceRepository
     private function clearAcronym(string $venue): string
     {
         $venue = preg_replace('/\d+/', '', $venue);
-        $venue = preg_replace('/\bIEEE\b/i', '', $venue);
         return trim($venue);
     }
 
-    private function findConferenceByVenue(string $venue): ?string
+    public function findConferenceByVenue(string $venue): ?string
     {
         $cleared_venue = $this->clearAcronym($venue);
         if ($cleared_venue === '') return null;
@@ -33,27 +32,27 @@ class ConferenceRepository
         return $acronym;
     }
 
-    public function insertConferenceIfNotExists(string $venue, ?int $year = null): ?string
-    {
-        $cleared_acronym = $this->clearAcronym($venue);
-        if ($cleared_acronym === '') return null;
+    // public function insertConferenceIfNotExists(string $venue, ?int $year = null): ?string
+    // {
+    //     $cleared_acronym = $this->clearAcronym($venue);
+    //     if ($cleared_acronym === '') return null;
 
-        $original = $this->findConferenceByVenue($venue);
-        if ($original) return $original;
+    //     $original = $this->findConferenceByVenue($venue);
+    //     if ($original) return $original;
 
-        $year = $year ?? (int)date('Y');
-        try {
-            $this->mysqli->begin_transaction();
-            $this->insertRanking('F');
-            $this->insertConference($cleared_acronym, $venue);
-            $this->insertConferenceInfo($cleared_acronym, $year, 'F');
-            $this->mysqli->commit();
-            return $cleared_acronym;
-        } catch (Exception $e) {
-            $this->mysqli->rollback();
-            return null;
-        }
-    }
+    //     $year = $year ?? (int)date('Y');
+    //     try {
+    //         $this->mysqli->begin_transaction();
+    //         $this->insertRanking('F');
+    //         $this->insertConference($cleared_acronym, $venue);
+    //         $this->insertConferenceInfo($cleared_acronym, $year, 'F');
+    //         $this->mysqli->commit();
+    //         return $cleared_acronym;
+    //     } catch (Exception $e) {
+    //         $this->mysqli->rollback();
+    //         return null;
+    //     }
+    // }
 
     private function insertRanking(string $value): void
     {
@@ -105,8 +104,9 @@ class ConferenceRepository
                     if (count($data) < 5) continue;
 
                     $title = trim($data[1]);
-                    $acronym = trim($data[2]);
+                    $acronym_raw = trim($data[2]);
                     $rank_raw = trim($data[4]);
+                    $acronym = $this->clearAcronym($acronym_raw);
 
                     if ($acronym === "" || $title === "") continue;
 

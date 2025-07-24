@@ -29,6 +29,7 @@ function prepareConferencePaperData($publication, $scopus_data = [])
         'numero_autori' => $numero_autori,
         'DOI' => $publication['doi'],
         'nome_autori' => $authors_string,
+        'acronimo_dblp' => $publication['venue'],
         'FWCI' => null,
         'citation_count' => $scopus_data['citation'] ?? null,
         'scopus_id' => $scopus_data['scopus_id'] ?? null,
