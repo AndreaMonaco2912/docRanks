@@ -34,7 +34,6 @@ class AuthorProcessor
 
             return $this->processAuthorComplete($scopusId, $authorInfo['name'], $authorInfo['surname']);
         } catch (Exception $e) {
-            error_log("Errore processAuthorCompleteByPid: " . $e->getMessage());
             return false;
         }
     }
@@ -113,7 +112,6 @@ class AuthorProcessor
                     $this->processOtherPublication($pub);
                 }
             } catch (Exception $e) {
-                error_log("Errore pubblicazione '{$pub['title']}': " . $e->getMessage());
             }
         }
     }

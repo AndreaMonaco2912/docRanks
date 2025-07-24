@@ -14,7 +14,6 @@ function searchDBLPByAuthor(string $name, string $surname)
             $all_publications = array_merge($all_publications, $formatted);
         }
     } catch (Exception $e) {
-        error_log("Errore query DBLP '{$query}': " . $e->getMessage());
     }
 
     return $all_publications;

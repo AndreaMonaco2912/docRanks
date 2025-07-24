@@ -26,12 +26,11 @@ class AuthorsRepository
         try {
             $this->db->query("SET FOREIGN_KEY_CHECKS = 0");
 
-            $this->db->query("TRUNCATE TABLE articoli");
-            $this->db->query("TRUNCATE TABLE atti_di_convegno");
             $this->db->query("TRUNCATE TABLE autori");
             $this->db->query("TRUNCATE TABLE informazioni_autori");
             $this->db->query("TRUNCATE TABLE partecipazione");
             $this->db->query("TRUNCATE TABLE redazione");
+            $this->db->query("TRUNCATE TABLE PUBBLICAZIONE_ALTRO");
 
             $this->db->query("SET FOREIGN_KEY_CHECKS = 1");
 

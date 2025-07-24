@@ -127,8 +127,6 @@ class ScopusAuthorData
         if ($http_code === 200 && empty($curl_error)) {
             return $response;
         }
-
-        error_log("Scopus API Error: HTTP $http_code - $curl_error");
         return false;
     }
 

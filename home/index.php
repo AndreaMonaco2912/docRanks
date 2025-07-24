@@ -12,6 +12,7 @@
         <a href="">Home</a> |
         <a href="autore/">Cerca Autore</a> |
         <a href="autore/aggiungi.php">Aggiungi Autore</a> |
+        <a href="../update_database.php">Aggiorna Database</a> |
         <a href="../reset_and_init.php">Reset Database</a>
     </nav>
 
