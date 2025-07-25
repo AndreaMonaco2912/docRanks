@@ -181,7 +181,9 @@ class AuthorProcessor
         $scopusData = $this->scopusData->getPublicationData($doi);
         $journalId = null;
         if ($scopusData && !empty($scopusData['source_id'])) {
-            $journalId = $scopusData['source_id'];
+            if ($this->journalRepository->journalExists($scopusData['source_id'])) {
+                $journalId = $scopusData['source_id'];
+            }
         } else {
             $journalId = $this->journalRepository->getJournalByVenue($pub['venue']);
         }
