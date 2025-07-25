@@ -14,7 +14,6 @@ function searchDBLPByAuthor(string $name, string $surname)
             $all_publications = array_merge($all_publications, $formatted);
         }
     } catch (Exception $e) {
-        error_log("Errore query DBLP '{$query}': " . $e->getMessage());
     }
 
     return $all_publications;
@@ -72,4 +71,33 @@ function getAuthorsArray($authors)
         return array_map(fn($a) => is_array($a) ? ($a['text'] ?? '') : $a, $authors);
     }
     return is_array($authors) ? [is_array($authors) ? ($authors['text'] ?? '') : $authors] : [];
+}
+
+function getAuthorNameFromPid(string $pid): array
+{
+    $url = "https://dblp.org/pid/{$pid}.xml";
+
+    $response = file_get_contents($url);
+    if ($response === false) {
+        throw new Exception('Errore chiamata DBLP PID');
+    }
+
+    $xml = simplexml_load_string($response);
+    if (!$xml) {
+        throw new Exception('Errore parsing XML DBLP');
+    }
+
+    $fullName = (string)$xml['name'];
+    if (empty($fullName)) {
+        throw new Exception('Nome non trovato nell\'attributo name');
+    }
+
+    $parts = explode(' ', $fullName);
+    $surname = array_pop($parts);
+    $name = implode(' ', $parts);
+
+    return [
+        'name' => $name,
+        'surname' => $surname
+    ];
 }

@@ -46,6 +46,24 @@ function handleJournalIdUpdate($mysqli, $scopus_id)
     }
 }
 
+function handleAcronymUpdate($mysqli, $scopus_id)
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_acronym'])) {
+        $dblp_venue = trim($_POST['dblp_venue']);
+        $new_acronym = trim($_POST['new_acronym']);
+
+        if (!empty($dblp_venue)) {
+            $paperRepo = new PaperRepository($mysqli);
+
+            $acronym_to_set = empty($new_acronym) ? null : $new_acronym;
+
+            if ($paperRepo->updateConferenceAcronymByDblpVenue($dblp_venue, $acronym_to_set)) {
+                header("Location: conference_papers.php?scopus_id=" . urlencode($scopus_id));
+            }
+        }
+    }
+}
+
 function renderEditableFWCI($publication, $label = 'FWCI')
 {
     $doi_hash = md5($publication['DOI']);
@@ -64,6 +82,31 @@ function renderEditableFWCI($publication, $label = 'FWCI')
                     <button type="submit" name="update_fwci">Salva</button>
                     <button type="button" class="btn-cancel">Annulla</button>
                 </form>
+            </div>
+        </td>
+    </tr>
+<?php
+}
+
+function renderEditableAcronym($paper)
+{
+    $doi_hash = md5($paper['DOI']);
+?>
+    <tr>
+        <td><strong>Acronimo Core Conferenza</strong></td>
+        <td>
+            <div id="edit_acronym_<?php echo $doi_hash; ?>" style="display: inline;">
+                <span><?php echo htmlspecialchars($paper['acronimo'] ?? 'N/A'); ?></span>
+                <button type="button" class="btn-edit">Modifica</button>
+            </div>
+            <div id="form_acronym_<?php echo $doi_hash; ?>" style="display: none;">
+                <form method="post" style="display: inline;">
+                    <input type="hidden" name="dblp_venue" value="<?php echo htmlspecialchars($paper['acronimo_dblp']); ?>">
+                    <input type="text" name="new_acronym" value="<?php echo htmlspecialchars($paper['acronimo'] ?? ''); ?>" placeholder="Acronimo">
+                    <button type="submit" name="update_acronym">Salva</button>
+                    <button type="button" class="btn-cancel">Annulla</button>
+                </form>
+                <br><small>Modifica l'acronimo per tutti i paper con venue DBLP: "<?php echo htmlspecialchars($paper['acronimo_dblp']); ?>"</small>
             </div>
         </td>
     </tr>

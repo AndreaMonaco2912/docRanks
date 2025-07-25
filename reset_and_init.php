@@ -11,7 +11,6 @@ try {
     $success = true;
 } catch (Exception $e) {
     $error_message = "Errore durante reset/init database: " . $e->getMessage();
-    error_log($error_message);
 }
 ?>
 <!DOCTYPE html>

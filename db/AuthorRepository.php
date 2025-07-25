@@ -129,18 +129,17 @@ class AuthorRepository
 
     private function insertAuthor(array $dati): bool
     {
-        $query = "INSERT INTO AUTORI (nome, cognome, scopus_id, h_index, numero_riviste, numero_citazioni, numero_documenti) 
-              VALUES (?, ?, ?, null, ?, ?, ?)";
+        $query = "INSERT INTO AUTORI (nome, cognome, scopus_id, h_index, numero_citazioni, numero_documenti) 
+              VALUES (?, ?, ?, null, ?, ?)";
 
         $stmt = $this->mysqli->prepare($query);
         if (!$stmt) return false;
 
         $stmt->bind_param(
-            "sssiii",
+            "sssii",
             $dati['nome'],
             $dati['cognome'],
             $dati['scopus_id'],
-            $dati['numero_riviste'],
             $dati['numero_citazioni'],
             $dati['numero_documenti']
         );
@@ -152,19 +151,15 @@ class AuthorRepository
 
     private function updateAuthor(array $dati): bool
     {
-        $query = "UPDATE AUTORI 
-              SET nome = ?, cognome = ?, numero_riviste = ?, 
-                  numero_citazioni = ?, numero_documenti = ? 
-              WHERE scopus_id = ?";
+        $query = "UPDATE AUTORI SET nome = ?, cognome = ?, numero_citazioni = ?, numero_documenti = ? WHERE scopus_id = ?";
 
         $stmt = $this->mysqli->prepare($query);
         if (!$stmt) return false;
 
         $stmt->bind_param(
-            "ssiiis",
+            "ssiis",
             $dati['nome'],
             $dati['cognome'],
-            $dati['numero_riviste'],
             $dati['numero_citazioni'],
             $dati['numero_documenti'],
             $dati['scopus_id']
@@ -220,5 +215,29 @@ class AuthorRepository
         $stmt->close();
 
         return $success;
+    }
+
+    public function insertOtherPublication(string $doi): void
+    {
+        $stmt = $this->mysqli->prepare("INSERT IGNORE INTO PUBBLICAZIONE_ALTRO (DOI, scopus_id) VALUES (?, ?)");
+        if (!$stmt) return;
+
+        $stmt->bind_param("ss", $doi, $this->scopusId);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    public function otherPublicationExists(string $doi): bool
+    {
+        $stmt = $this->mysqli->prepare("SELECT 1 FROM PUBBLICAZIONE_ALTRO WHERE DOI = ? AND scopus_id = ?");
+        if (!$stmt) return false;
+
+        $stmt->bind_param("ss", $doi, $this->scopusId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $exists = $result->num_rows > 0;
+        $stmt->close();
+
+        return $exists;
     }
 }

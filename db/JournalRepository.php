@@ -171,8 +171,8 @@ class JournalRepository
     public function insertJournal(string $id, string $name, string $publisher, string $issn)
     {
         $stmt = $this->mysqli->prepare("
-        INSERT IGNORE INTO RIVISTE (id, nome, link_rivista, publisher, issn)
-        VALUES (?, ?, '', ?, ?)
+        INSERT IGNORE INTO RIVISTE (id, nome, publisher, issn)
+        VALUES (?, ?, ?, ?)
     ");
         if (!$stmt) return false;
 

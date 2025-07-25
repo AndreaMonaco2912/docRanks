@@ -33,6 +33,7 @@ class PaperRepository
             ac.anno,
             ac.numero_autori,
             ac.nome_autori,
+            ac.acronimo_dblp,
             ac.EFWCI,
             ac.FWCI,
             ac.citation_count,
@@ -68,5 +69,34 @@ class PaperRepository
     public function updateFWCI(string $doi, ?float $fwci): bool
     {
         return $this->publicationRepo->updateFWCI($doi, $fwci);
+    }
+
+    public function updateConferenceAcronymByDblpVenue(string $dblpVenue, ?string $newAcronym): bool
+    {
+        if ($newAcronym !== null) {
+            $stmt = $this->mysqli->prepare("SELECT acronimo FROM CONFERENZE WHERE acronimo = ?");
+            if ($stmt) {
+                $stmt->bind_param("s", $newAcronym);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                if ($result->num_rows === 0) {
+                    $newAcronym = null;
+                }
+            }
+        }
+
+        $stmt = $this->mysqli->prepare("
+            UPDATE ATTI_DI_CONVEGNO 
+            SET acronimo = ? 
+            WHERE acronimo_dblp = ?
+        ");
+
+        if (!$stmt) return false;
+
+        $stmt->bind_param("ss", $newAcronym, $dblpVenue);
+        $success = $stmt->execute();
+        $stmt->close();
+
+        return $success;
     }
 }

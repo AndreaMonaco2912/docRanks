@@ -2,6 +2,7 @@
 
 require_once '../../db/connection.php';
 require_once '../../db/AuthorRepository.php';
+require_once '../../db/AuthorsRepository.php';
 require_once '../../includes/publication_handlers.php';
 
 $scopus_id = isset($_GET['scopus_id']) ? trim($_GET['scopus_id']) : '';
@@ -36,10 +37,10 @@ handleHIndexUpdate($mysqli, $scopus_id);
     <h1>DocRanks - Profilo Autore</h1>
 
     <?php include '../../includes/search_bar.php'; ?>
-    <main>
-        <?php if ($author_exists): ?>
-            <?php $author = $authorRepository->getProfile(); ?>
 
+    <?php if ($author_exists): ?>
+        <?php $author = $authorRepository->getProfile(); ?>
+        <main>
             <h2>Profilo Completo</h2>
 
             <section>
@@ -67,7 +68,7 @@ handleHIndexUpdate($mysqli, $scopus_id);
 
                             <div id="form_hindex_<?php echo md5($author['scopus_id']); ?>" style="display: none;">
                                 <form method="post" style="display: inline;">
-                                    <label for="hindex_input_<?php echo $id_suffix; ?>">H-Index</label>
+                                    <label for="hindex_input_<?php echo md5($author['scopus_id']); ?>">H-Index</label>
                                     <input type="number" step="0.1" name="new_hindex"
                                         id="hindex_input_<?php echo $id_suffix; ?>"
                                         value="<?php echo htmlspecialchars($author['h_index'] ?? ''); ?>"
@@ -162,25 +163,57 @@ handleHIndexUpdate($mysqli, $scopus_id);
                     </table>
                 </section>
             <?php endif; ?>
-
-            <footer>
-                <h3>Azioni</h3>
-                <p>
-                    <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Conference Papers</a><br>
-                    <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Journal Articles</a><br>
-                    <a href="aggiungi.php">Aggiungi altro autore</a>
-                </p>
-            </footer>
-
-        <?php elseif (!empty($scopus_id)): ?>
-            <h3>Autore Non Trovato</h3>
-            <p>L'autore con Scopus ID <strong><?php echo htmlspecialchars($scopus_id); ?></strong> non è presente nel database.</p>
+        </main>
+        <footer>
+            <h3>Azioni</h3>
             <p>
-                <a href="aggiungi.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Aggiungi questo autore al database</a>
+                <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Conference Papers</a><br>
+                <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Journal Articles</a><br>
+                <a href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutte le Altre Pubblicazioni</a><br>
+                <a href="aggiungi.php">Aggiungi altro autore</a>
             </p>
-        <?php endif; ?>
+        </footer>
 
-    </main>
+    <?php elseif (!empty($scopus_id)): ?>
+        <h3>Autore Non Trovato</h3>
+        <p>L'autore con Scopus ID <strong><?php echo htmlspecialchars($scopus_id); ?></strong> non è presente nel database.</p>
+        <p>
+            <a href="aggiungi.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Aggiungi questo autore al database</a>
+        </p>
+    <?php else: ?>
+        <main>
+            <h2>Tutti gli Autori</h2>
+
+            <?php
+            $authorsRepo = new AuthorsRepository($mysqli);
+            $authors = $authorsRepo->getAllAuthors();
+            ?>
+            <table border="1">
+                <caption>Elenco completo degli autori presenti nel database</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Cognome</th>
+                        <th scope="col">Scopus ID</th>
+                        <th scope="col">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($authors as $author): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($author['nome']) ?></td>
+                            <td><?= htmlspecialchars($author['cognome']) ?></td>
+                            <td><?= htmlspecialchars($author['scopus_id']) ?></td>
+                            <td>
+                                <a href="?scopus_id=<?= urlencode($author['scopus_id']) ?>">Visualizza Profilo</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </main>
+    <?php endif; ?>
+
 
     <?php renderEditingJavaScript(); ?>
 

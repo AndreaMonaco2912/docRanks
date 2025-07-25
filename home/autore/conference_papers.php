@@ -14,6 +14,7 @@ if (empty($scopus_id)) {
 }
 
 handleFWCIUpdate($mysqli, $scopus_id, 'paper');
+handleAcronymUpdate($mysqli, $scopus_id);
 
 $authorRepo = new AuthorRepository($mysqli, $scopus_id);
 $paperRepo = new PaperRepository($mysqli);
@@ -30,7 +31,7 @@ $stats = calculatePublicationStats($conference_papers);
 $ranking_distribution = [];
 
 foreach ($conference_papers as $paper) {
-    $ranking = $paper['ranking_conferenza'] ?? 'N/A';
+    $ranking = $paper['ranking_conferenza'] ?? 'F';
     $ranking_distribution[$ranking] = ($ranking_distribution[$ranking] ?? 0) + 1;
 }
 
@@ -92,14 +93,22 @@ arsort($ranking_distribution);
                             <td><strong>Anno</strong></td>
                             <td><?php echo $paper['anno']; ?></td>
                         </tr>
+                        <?php renderEditableAcronym($paper); ?>
                         <tr>
-                            <td><strong>Conferenza</strong></td>
+                            <td><strong>Nome Conferenza</strong></td>
                             <td>
-                                <strong><?php echo htmlspecialchars($paper['acronimo']); ?></strong>
-                                <?php if ($paper['titolo_conferenza']): ?>
-                                    - <?php echo htmlspecialchars($paper['titolo_conferenza']); ?>
-                                <?php endif; ?>
+                                <?php
+                                if ($paper['titolo_conferenza']) {
+                                    echo htmlspecialchars($paper['titolo_conferenza']);
+                                } else {
+                                    echo htmlspecialchars($paper['acronimo_dblp'] ?? 'N/A');
+                                }
+                                ?>
                             </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Venue DBLP Originale</strong></td>
+                            <td><?php echo htmlspecialchars($paper['acronimo_dblp'] ?? 'N/A'); ?></td>
                         </tr>
                         <tr>
                             <td><strong>Ranking Conferenza</strong></td>
@@ -127,7 +136,7 @@ arsort($ranking_distribution);
                                     }
                                     echo "<span style='{$color}'>{$ranking}</span>";
                                 } else {
-                                    echo '<em>N/A</em>';
+                                    echo "<span style='color: gray;'>F</span>";
                                 }
                                 ?>
                             </td>
