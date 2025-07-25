@@ -1,6 +1,6 @@
 <?php
 
-$servername = "localhost";
+$servername = getenv('DB_HOST') ?: "localhost";
 $username = "root";
 $password = "";
 $database = "docranks";
