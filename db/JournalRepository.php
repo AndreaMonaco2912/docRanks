@@ -239,4 +239,18 @@ class JournalRepository
         $stmt->execute();
         $stmt->close();
     }
+
+    public function journalExists(string $journalId): bool
+    {
+        $stmt = $this->mysqli->prepare("SELECT 1 FROM RIVISTE WHERE id = ? LIMIT 1");
+        if (!$stmt) return false;
+
+        $stmt->bind_param("s", $journalId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $exists = $result->num_rows > 0;
+        $stmt->close();
+
+        return $exists;
+    }
 }
