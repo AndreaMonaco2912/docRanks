@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
 
             <?php else: ?>
-                <p>Errore Importazione</p>
+                <p>Errore Importazione: l'api key non è stata riconosciuta nel file .env</p>
             <?php endif; ?>
         </section>
 
