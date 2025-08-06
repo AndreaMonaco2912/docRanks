@@ -4,6 +4,7 @@ require_once '../../db/connection.php';
 require_once '../../db/AuthorRepository.php';
 require_once '../../db/AuthorsRepository.php';
 require_once '../../includes/publication_handlers.php';
+require_once '../../includes/bootstrap.php';
 
 $scopus_id = isset($_GET['scopus_id']) ? trim($_GET['scopus_id']) : '';
 $dati_autore_completi = null;
@@ -16,7 +17,6 @@ if (!empty($scopus_id) && is_numeric($scopus_id)) {
 
 handleHIndexUpdate($mysqli, $scopus_id);
 ?>
-
 <!DOCTYPE html>
 <html lang="it">
 
@@ -24,14 +24,30 @@ handleHIndexUpdate($mysqli, $scopus_id);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DocRanks - Profilo Autore</title>
+    <?php echo $bootstrap_css; ?>
+    <?php echo $bootstrap_icons; ?>
+    <link rel="stylesheet" href="../../docranks.css">
 </head>
 
 <body>
     <nav>
-        <a href="../">Home</a> |
-        <a href="">Cerca Autore</a> |
-        <a href="aggiungi.php">Aggiungi Autore</a> |
-        <a href="../../reset_and_init.php">Reset Database</a>
+        <div class="container">
+            <a href="..">
+                Home
+            </a>
+            <span class="text-muted">|</span>
+            <a href="" class="fw-bold text-primary">
+                Cerca Autore
+            </a>
+            <span class="text-muted">|</span>
+            <a href="aggiungi.php">
+                Aggiungi Autore
+            </a>
+            <span class="text-muted">|</span>
+            <a href="../../reset_and_init.php">
+                Reset Database
+            </a>
+        </div>
     </nav>
 
     <h1>DocRanks - Profilo Autore</h1>
@@ -45,7 +61,7 @@ handleHIndexUpdate($mysqli, $scopus_id);
 
             <section>
                 <h3>Informazioni Generali</h3>
-                <table border="1">
+                <table class="table table-hover">
                     <tr>
                         <th>Campo</th>
                         <th>Valore</th>
@@ -103,7 +119,7 @@ handleHIndexUpdate($mysqli, $scopus_id);
                 $total_cit_papers = $papers_stats['total_citations'];
                 ?>
 
-                <table border="1">
+                <table class="table table-hover">
                     <tr>
                         <th>Tipo Pubblicazione</th>
                         <th>Numero</th>
@@ -145,7 +161,7 @@ handleHIndexUpdate($mysqli, $scopus_id);
                 <section>
                     <h3>Informazioni per Anno</h3>
 
-                    <table border="1">
+                    <table class="table table-hover">
                         <tr>
                             <th>Anno</th>
                             <th>Documenti</th>
@@ -164,15 +180,22 @@ handleHIndexUpdate($mysqli, $scopus_id);
                 </section>
             <?php endif; ?>
         </main>
-        <footer>
-            <h3>Azioni</h3>
-            <p>
-                <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Conference Papers</a><br>
-                <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Journal Articles</a><br>
-                <a href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutte le Altre Pubblicazioni</a><br>
-                <a href="aggiungi.php">Aggiungi altro autore</a>
-            </p>
-        </footer>
+        <section class="card">
+            <h3 class="card-header">Azioni</h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <a class="card-link" href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Conference Papers</a><br>
+                </li>
+                <li class="list-group-item">
+                    <a class="card-link" href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Journal Articles</a><br>
+                </li>
+                <li class="list-group-item">
+                    <a class="card-link" href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutte le Altre Pubblicazioni</a><br>
+                <li class="list-group-item">
+                    <a class="card-link" href="aggiungi.php">Aggiungi altro autore</a>
+                </li>
+            </ul>
+        </section>
 
     <?php elseif (!empty($scopus_id)): ?>
         <h3>Autore Non Trovato</h3>
@@ -188,7 +211,7 @@ handleHIndexUpdate($mysqli, $scopus_id);
             $authorsRepo = new AuthorsRepository($mysqli);
             $authors = $authorsRepo->getAllAuthors();
             ?>
-            <table border="1">
+            <table class="table table-hover">
                 <caption>Elenco completo degli autori presenti nel database</caption>
                 <thead>
                     <tr>
@@ -216,6 +239,8 @@ handleHIndexUpdate($mysqli, $scopus_id);
 
 
     <?php renderEditingJavaScript(); ?>
+
+    <?php echo $bootstrap_js; ?>
 
 </body>
 

@@ -5,15 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DocRanks - Home</title>
+    <?php
+    require_once '../includes/bootstrap.php';
+    echo $bootstrap_css;
+    echo $bootstrap_css;
+    ?>
+    <link rel="stylesheet" href="../docranks.css">
 </head>
 
 <body>
     <nav>
-        <a href="">Home</a> |
-        <a href="autore/">Cerca Autore</a> |
-        <a href="autore/aggiungi.php">Aggiungi Autore</a> |
-        <a href="../update_database.php">Aggiorna Database</a> |
-        <a href="../reset_and_init.php">Reset Database</a>
+        <div class="container">
+            <a href="" class="fw-bold text-primary">
+                Home
+            </a>
+            <span class="text-muted">|</span>
+            <a href="autore/">
+                Cerca Autore
+            </a>
+            <span class="text-muted">|</span>
+            <a href="autore/aggiungi.php">
+                Aggiungi Autore
+            </a>
+            <span class="text-muted">|</span>
+            <a href="../update_database.php">
+                Aggiorna Database
+            </a>
+            <span class="text-muted">|</span>
+            <a href="../reset_and_init.php">
+                Reset Database
+            </a>
+        </div>
     </nav>
 
     <h1>DocRanks - Sistema di Gestione Documenti Accademici</h1>
@@ -40,6 +62,7 @@
             <a href="autore/aggiungi.php">Aggiungi un nuovo autore</a>
         </p>
     </main>
+    <?php echo $bootstrap_js; ?>
 </body>
 
 </html>

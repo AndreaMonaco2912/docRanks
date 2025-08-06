@@ -2,6 +2,8 @@
 set_time_limit(600);
 ini_set('memory_limit', '512M');
 
+require_once './includes/bootstrap.php';
+
 $success = false;
 $error_message = '';
 
@@ -20,6 +22,11 @@ try {
     <meta charset="UTF-8">
     <title>Reset Database - DocRanks</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php
+    echo $bootstrap_css;
+    echo $bootstrap_icons;
+    ?>
+    <link rel="stylesheet" href="docranks.css">
 </head>
 
 <body>
@@ -37,6 +44,7 @@ try {
 
         <p><a href="home/">← Torna alla home</a></p>
     </main>
+    <?php echo $bootstrap_js; ?>
 </body>
 
 </html>

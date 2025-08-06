@@ -4,6 +4,7 @@ require_once '../../db/connection.php';
 require_once '../../db/publication/OthersRepository.php';
 require_once '../../db/AuthorRepository.php';
 require_once '../../includes/navigation.php';
+require_once '../../includes/bootstrap.php';
 
 $scopus_id = isset($_GET['scopus_id']) ? trim($_GET['scopus_id']) : '';
 
@@ -31,6 +32,9 @@ $other_publications = $othersRepo->getOthersDetails($scopus_id);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DocRanks - Altre Pubblicazioni di <?php echo htmlspecialchars($author['nome'] . ' ' . $author['cognome']); ?></title>
+    <?php echo $bootstrap_css;
+    echo $bootstrap_icons; ?>
+    <link rel="stylesheet" href="../../docranks.css">
 </head>
 
 <body>
@@ -49,7 +53,7 @@ $other_publications = $othersRepo->getOthersDetails($scopus_id);
                 <section>
                     <h4><?php echo htmlspecialchars($pub['titolo']); ?></h4>
 
-                    <table border="1">
+                    <table class="table table-hover">
                         <tr>
                             <td><strong>DOI</strong></td>
                             <td><?php echo htmlspecialchars($pub['DOI']); ?></td>
@@ -80,6 +84,7 @@ $other_publications = $othersRepo->getOthersDetails($scopus_id);
 
     <?php renderActions($scopus_id, 'others'); ?>
 
+    <?php echo $bootstrap_js; ?>
 </body>
 
 </html>

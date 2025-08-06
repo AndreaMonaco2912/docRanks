@@ -5,6 +5,7 @@ require_once '../../db/publication/PaperRepository.php';
 require_once '../../db/AuthorRepository.php';
 require_once '../../includes/publication_handlers.php';
 require_once '../../includes/navigation.php';
+require_once '../../includes/bootstrap.php';
 
 $scopus_id = isset($_GET['scopus_id']) ? trim($_GET['scopus_id']) : '';
 
@@ -45,6 +46,9 @@ arsort($ranking_distribution);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DocRanks - Conference Papers di <?php echo htmlspecialchars($author['nome'] . ' ' . $author['cognome']); ?></title>
+    <?php echo $bootstrap_css;
+    echo $bootstrap_icons; ?>
+    <link rel="stylesheet" href="../../docranks.css">
 </head>
 
 <body>
@@ -57,7 +61,8 @@ arsort($ranking_distribution);
     <?php renderYearDistributionTable($stats['by_year']); ?>
     <section>
         <h4>Distribuzione per Ranking Conferenze</h4>
-        <table border="1">
+
+        <table class="table table-hover">
             <tr>
                 <th>Ranking</th>
                 <th>Numero Papers</th>
@@ -84,7 +89,7 @@ arsort($ranking_distribution);
                 <section>
                     <h4><?php echo htmlspecialchars($paper['titolo']); ?></h4>
 
-                    <table border="1"">
+                    <table class="table table-hover">
                         <tr>
                             <td><strong>DOI</strong></td>
                             <td><?php echo htmlspecialchars($paper['DOI']); ?></td>
@@ -183,7 +188,10 @@ arsort($ranking_distribution);
     <?php renderActions($scopus_id, 'conferences'); ?>
 
     <?php renderEditingJavaScript(); ?>
+
+    <?php echo $bootstrap_js; ?>
 </body>
+
 
 </html>
 

@@ -4,16 +4,24 @@ function renderNavigation($scopus_id, $current_page = '')
 {
 ?>
     <nav>
-        <a href="../../home/index.php">Home</a> |
-        <a href="../index.php">Cerca Autore</a> |
-        <a href="index.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
-            <?php echo $current_page === 'profile' ? 'style="font-weight: bold;"' : ''; ?>>Profilo Autore</a> |
-        <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
-            <?php echo $current_page === 'conferences' ? 'style="font-weight: bold;"' : ''; ?>>Conference Papers</a> |
-        <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
-            <?php echo $current_page === 'journals' ? 'style="font-weight: bold;"' : ''; ?>>Journal Articles</a> |
-        <a href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
-            <?php echo $current_page === 'others' ? 'style="font-weight: bold;"' : ''; ?>>Altre Pubblicazioni</a>
+        <div class="container">
+            <a href="../../home/index.php">
+                Home
+            </a>
+            <span class="text-muted">|</span>
+            <a href="../index.php">
+                Cerca Autore
+            </a>
+            <span class="text-muted">|</span>
+            <a href="index.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
+                <?php echo $current_page === 'profile' ? 'class="fw-bold text-primary;"' : ''; ?>>Profilo Autore</a> |
+            <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
+                <?php echo $current_page === 'conferences' ? 'class="fw-bold text-primary;"' : ''; ?>>Conference Papers</a> |
+            <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
+                <?php echo $current_page === 'journals' ? 'class="fw-bold text-primary;"' : ''; ?>>Journal Articles</a> |
+            <a href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
+                <?php echo $current_page === 'others' ? 'class="fw-bold text-primary;"' : ''; ?>>Altre Pubblicazioni</a>
+        </div>
     </nav>
 <?php
 }
@@ -33,7 +41,7 @@ function renderStatsTable($stats, $extra_rows = [])
 ?>
     <section>
         <h3>Statistiche</h3>
-        <table border="1">
+        <table class="table table-hover">
             <tr>
                 <th>Metrica</th>
                 <th>Valore</th>
@@ -66,7 +74,7 @@ function renderYearDistributionTable($by_year_data)
 ?>
     <section>
         <h4>Distribuzione per Anno</h4>
-        <table border="1">
+        <table class="table table-hover">
             <tr>
                 <th>Anno</th>
                 <th>Numero Pubblicazioni</th>
@@ -85,21 +93,29 @@ function renderYearDistributionTable($by_year_data)
 function renderActions($scopus_id, $current_page)
 {
 ?>
-    <footer>
-        <h3>Azioni</h3>
-        <p>
-            <a href="index.php?scopus_id=<?php echo urlencode($scopus_id); ?>">← Torna al Profilo Autore</a><br>
+    <aside class="card">
+        <h3 class="card-header">Azioni</h3>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <a href="index.php?scopus_id=<?php echo urlencode($scopus_id); ?>">← Torna al Profilo Autore</a><br>
+            </li>
             <?php if ($current_page !== 'conferences'): ?>
-                <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">📄 Visualizza Conference Papers</a><br>
+                <li class="list-group-item">
+                    <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza Conference Papers</a><br>
+                </li>
             <?php endif; ?>
             <?php if ($current_page !== 'journals'): ?>
-                <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">📑 Visualizza Journal Articles</a>
+                <li class="list-group-item">
+                    <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza Journal Articles</a>
+                </li>
             <?php endif; ?>
             <?php if ($current_page !== 'others'): ?>
-                <a href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>">📚 Visualizza Altre Pubblicazioni</a>
+                <li class="list-group-item">
+                    <a href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza Altre Pubblicazioni</a>
+                </li>
             <?php endif; ?>
-        </p>
-    </footer>
+        </ul>
+    </aside>
 <?php
 }
 ?>

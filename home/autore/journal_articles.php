@@ -5,6 +5,7 @@ require_once '../../db/AuthorRepository.php';
 require_once '../../db/JournalRepository.php';
 require_once '../../includes/publication_handlers.php';
 require_once '../../includes/navigation.php';
+require_once '../../includes/bootstrap.php';
 
 $scopus_id = isset($_GET['scopus_id']) ? trim($_GET['scopus_id']) : '';
 
@@ -48,6 +49,9 @@ arsort($journals_count);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DocRanks - Journal Articles di <?php echo htmlspecialchars($author['nome'] . ' ' . $author['cognome']); ?></title>
+    <?php echo $bootstrap_css;
+    echo $bootstrap_icons; ?>
+    <link rel="stylesheet" href="../../docranks.css">
 </head>
 
 <body>
@@ -60,7 +64,7 @@ arsort($journals_count);
     <?php renderYearDistributionTable($stats['by_year']); ?>
     <section>
         <h4>Distribuzione per Quartile (miglior quartile rivista)</h4>
-        <table border="1">
+        <table class="table table-hover">
             <tr>
                 <th>Quartile</th>
                 <th>Numero Articles</th>
@@ -87,7 +91,7 @@ arsort($journals_count);
                 <section>
                     <h4><?php echo htmlspecialchars($article['titolo']); ?></h4>
 
-                    <table border="1">
+                    <table class="table table-hover">
                         <tr>
                             <td><strong>DOI</strong></td>
                             <td><?php echo htmlspecialchars($article['DOI']); ?></td>
@@ -138,36 +142,36 @@ arsort($journals_count);
                                     <td><strong>Categorie e Quartili (<?php echo $article['anno']; ?>)</strong></td>
                                     <td>
                                         <ul>
-                                        <?php foreach ($categorie_quartili as $cat): ?>
-                                            <li>
-                                                <strong><?php echo htmlspecialchars($cat['nome_categoria']); ?></strong>
-                                                <?php if ($cat['nome_area']): ?>
-                                                    <small>(<?php echo htmlspecialchars($cat['nome_area']); ?>)</small>
-                                                <?php endif; ?>
-                                                <?php if ($cat['quartile']): ?>
-                                                    <?php
-                                                    $quartile_color = '';
-                                                    switch ($cat['quartile']) {
-                                                        case 1:
-                                                            $quartile_color = 'color: green; font-weight: bold;';
-                                                            break;
-                                                        case 2:
-                                                            $quartile_color = 'color: blue; font-weight: bold;';
-                                                            break;
-                                                        case 3:
-                                                            $quartile_color = 'color: orange;';
-                                                            break;
-                                                        case 4:
-                                                            $quartile_color = 'color: red;';
-                                                            break;
-                                                    }
-                                                    ?>
-                                                    - <span style="<?php echo $quartile_color; ?>">Q<?php echo $cat['quartile']; ?></span>
-                                                <?php else: ?>
-                                                    - <em>Quartile N/A</em>
-                                                <?php endif; ?>
+                                            <?php foreach ($categorie_quartili as $cat): ?>
+                                                <li>
+                                                    <strong><?php echo htmlspecialchars($cat['nome_categoria']); ?></strong>
+                                                    <?php if ($cat['nome_area']): ?>
+                                                        <small>(<?php echo htmlspecialchars($cat['nome_area']); ?>)</small>
+                                                    <?php endif; ?>
+                                                    <?php if ($cat['quartile']): ?>
+                                                        <?php
+                                                        $quartile_color = '';
+                                                        switch ($cat['quartile']) {
+                                                            case 1:
+                                                                $quartile_color = 'color: green; font-weight: bold;';
+                                                                break;
+                                                            case 2:
+                                                                $quartile_color = 'color: blue; font-weight: bold;';
+                                                                break;
+                                                            case 3:
+                                                                $quartile_color = 'color: orange;';
+                                                                break;
+                                                            case 4:
+                                                                $quartile_color = 'color: red;';
+                                                                break;
+                                                        }
+                                                        ?>
+                                                        - <span style="<?php echo $quartile_color; ?>">Q<?php echo $cat['quartile']; ?></span>
+                                                    <?php else: ?>
+                                                        - <em>Quartile N/A</em>
+                                                    <?php endif; ?>
                                                 </li>
-                                        <?php endforeach; ?>
+                                            <?php endforeach; ?>
                                         </ul>
                                     </td>
                                 </tr>
@@ -262,6 +266,8 @@ arsort($journals_count);
     <?php renderActions($scopus_id, 'journals'); ?>
 
     <?php renderEditingJavaScript(); ?>
+
+    <?php echo $bootstrap_js; ?>
 </body>
 
 </html>

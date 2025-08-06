@@ -6,7 +6,7 @@ DocRanks è un sistema per l'analisi delle pubblicazioni accademiche che inegra 
 
 ### Database
 
-Utilizza il file [dockranks.sql](sql/docranks.sql) per creare un database con le tabelle necessarie al funzionamento.
+Utilizza il file [docranks.sql](sql/docranks.sql) per creare un database con le tabelle necessarie al funzionamento.
 
 Il software assume:
 
