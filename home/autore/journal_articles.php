@@ -88,7 +88,7 @@ arsort($journals_count);
         <?php else: ?>
 
             <?php foreach ($journal_articles as $article): ?>
-                <section class="card mb-3">
+                <article class="card mb-3">
                     <h4 class="card-header"><?php echo htmlspecialchars($article['titolo']); ?></h4>
 
                     <table class="table table-hover card-body">
@@ -256,7 +256,7 @@ arsort($journals_count);
                             <td><?php echo htmlspecialchars($article['nome_autori']); ?></td>
                         </tr>
                     </table>
-                </section>
+                </article>
             <?php endforeach; ?>
 
         <?php endif; ?>

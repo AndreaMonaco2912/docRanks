@@ -86,7 +86,7 @@ arsort($ranking_distribution);
         <?php else: ?>
 
             <?php foreach ($conference_papers as $paper): ?>
-                <section class="card mb-3">
+                <article class="card mb-3">
                     <h4 class="card-header"><?php echo htmlspecialchars($paper['titolo']); ?></h4>
 
                     <table class="table table-hover card-body">
@@ -178,7 +178,7 @@ arsort($ranking_distribution);
                             <td><?php echo htmlspecialchars($paper['nome_autori']); ?></td>
                         </tr>
                     </table>
-                </section>
+                </article>
             <?php endforeach; ?>
 
         <?php endif; ?>

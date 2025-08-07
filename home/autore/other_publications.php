@@ -50,7 +50,7 @@ $other_publications = $othersRepo->getOthersDetails($scopus_id);
         <?php else: ?>
 
             <?php foreach ($other_publications as $pub): ?>
-                <section class="card mb-3">
+                <article class="card mb-3">
                     <h4 class="card-header"><?php echo htmlspecialchars($pub['titolo']); ?></h4>
 
                     <table class="table table-hover card-body">
@@ -75,7 +75,7 @@ $other_publications = $othersRepo->getOthersDetails($scopus_id);
                             <td><?php echo htmlspecialchars($pub['nome_autori']); ?></td>
                         </tr>
                     </table>
-                </section>
+                </article>
             <?php endforeach; ?>
 
         <?php endif; ?>
