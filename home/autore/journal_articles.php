@@ -88,10 +88,10 @@ arsort($journals_count);
         <?php else: ?>
 
             <?php foreach ($journal_articles as $article): ?>
-                <section>
-                    <h4><?php echo htmlspecialchars($article['titolo']); ?></h4>
+                <section class="card mb-3">
+                    <h4 class="card-header"><?php echo htmlspecialchars($article['titolo']); ?></h4>
 
-                    <table class="table table-hover">
+                    <table class="table table-hover card-body">
                         <tr>
                             <td><strong>DOI</strong></td>
                             <td><?php echo htmlspecialchars($article['DOI']); ?></td>

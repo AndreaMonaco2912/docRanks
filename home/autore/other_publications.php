@@ -50,10 +50,10 @@ $other_publications = $othersRepo->getOthersDetails($scopus_id);
         <?php else: ?>
 
             <?php foreach ($other_publications as $pub): ?>
-                <section>
-                    <h4><?php echo htmlspecialchars($pub['titolo']); ?></h4>
+                <section class="card mb-3">
+                    <h4 class="card-header"><?php echo htmlspecialchars($pub['titolo']); ?></h4>
 
-                    <table class="table table-hover">
+                    <table class="table table-hover card-body">
                         <tr>
                             <td><strong>DOI</strong></td>
                             <td><?php echo htmlspecialchars($pub['DOI']); ?></td>
