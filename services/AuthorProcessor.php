@@ -1,15 +1,15 @@
 <?php
-require_once dirname(__DIR__) . '/scopus/ScopusAuthorData.php';
-require_once dirname(__DIR__) . '/scopus/dblp_integration.php';
+require_once dirname(__DIR__) . '/api/ScopusAuthorData.php';
+require_once dirname(__DIR__) . '/api/dblp_integration.php';
 require_once dirname(__DIR__) . '/db/connection.php';
-require_once dirname(__DIR__) . '/db/AuthorRepository.php';
-require_once dirname(__DIR__) . '/db/publication/PaperRepository.php';
-require_once dirname(__DIR__) . '/db/publication/ArticleRepository.php';
-require_once dirname(__DIR__) . '/db/JournalRepository.php';
-require_once dirname(__DIR__) . '/db/core/ConferenceRepository.php';
+require_once dirname(__DIR__) . '/db/repositories/AuthorRepository.php';
+require_once dirname(__DIR__) . '/db/repositories/PaperRepository.php';
+require_once dirname(__DIR__) . '/db/repositories/ArticleRepository.php';
+require_once dirname(__DIR__) . '/db/repositories/JournalRepository.php';
+require_once dirname(__DIR__) . '/db/repositories/ConferenceRepository.php';
 require_once dirname(__DIR__) . '/includes/publication_parser.php';
 require_once dirname(__DIR__) . '/includes/env_loader.php';
-require_once dirname(__DIR__) . '/db/publication/OthersRepository.php';
+require_once dirname(__DIR__) . '/db/repositories/OthersRepository.php';
 
 class AuthorProcessor
 {

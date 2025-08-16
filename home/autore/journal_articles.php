@@ -1,8 +1,8 @@
 <?php
 require_once '../../db/connection.php';
-require_once '../../db/publication/ArticleRepository.php';
-require_once '../../db/AuthorRepository.php';
-require_once '../../db/JournalRepository.php';
+require_once '../../db/repositories/ArticleRepository.php';
+require_once '../../db/repositories/AuthorRepository.php';
+require_once '../../db/repositories/JournalRepository.php';
 require_once '../../includes/publication_handlers.php';
 require_once '../../includes/navigation.php';
 require_once '../../includes/bootstrap.php';

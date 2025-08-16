@@ -1,7 +1,7 @@
 <?php
 
-require_once '../../db/publication/PaperRepository.php';
-require_once '../../db/publication/ArticleRepository.php';
+require_once '../../db/repositories/PaperRepository.php';
+require_once '../../db/repositories/ArticleRepository.php';
 
 function handleFWCIUpdate($mysqli, $scopus_id, $publication_type = 'article')
 {

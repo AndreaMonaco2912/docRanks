@@ -1,8 +1,8 @@
 <?php
 
 require_once '../../db/connection.php';
-require_once '../../db/AuthorRepository.php';
-require_once '../../db/AuthorsRepository.php';
+require_once '../../db/repositories/AuthorRepository.php';
+require_once '../../db/repositories/AuthorsRepository.php';
 require_once '../../includes/publication_handlers.php';
 require_once '../../includes/bootstrap.php';
 

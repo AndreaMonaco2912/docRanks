@@ -8,8 +8,9 @@ $success = false;
 $error_message = '';
 
 try {
-    require_once 'db/reset_database.php';
-    require_once 'db/init_database.php';
+    require_once 'db/migrations/reset_database.php';
+
+    require_once 'db/migrations/init_database.php';
     $success = true;
 } catch (Exception $e) {
     $error_message = "Errore durante reset/init database: " . $e->getMessage();

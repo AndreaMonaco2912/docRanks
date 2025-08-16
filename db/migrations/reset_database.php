@@ -1,6 +1,6 @@
 <?php
 
-require 'connection.php';
+require dirname(__DIR__) . '/connection.php';
 
 if (!$mysqli->query("SET FOREIGN_KEY_CHECKS = 0")) {
     die("Errore durante la disabilitazione delle foreign key: " . $mysqli->error);

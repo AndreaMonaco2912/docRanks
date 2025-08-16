@@ -2,9 +2,9 @@
 set_time_limit(600);
 ini_set('memory_limit', '512M');
 
-require_once 'api/AuthorProcessor.php';
+require_once 'services/AuthorProcessor.php';
 require_once 'db/connection.php';
-require_once 'db/AuthorsRepository.php';
+require_once 'db/repositories/AuthorsRepository.php';
 require_once './includes/bootstrap.php';
 
 $success = false;
