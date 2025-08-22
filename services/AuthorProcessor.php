@@ -65,13 +65,11 @@ class AuthorProcessor
 
             $dblpPublications = searchDBLPByAuthor($name, $surname);
 
-            $filtered = filterDBLPPublications($dblpPublications);
-
             $this->insertOrUpdateAuthor($name, $surname);
 
             $this->insertAuthorYearlyInfo();
 
-            $this->processPublications($filtered);
+            $this->processPublications($dblpPublications);
 
             return true;
         } catch (Exception $e) {

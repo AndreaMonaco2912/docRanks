@@ -18,20 +18,9 @@ class ScopusAuthorData
         $this->api_key = $api_key;
     }
 
-    public function loadAuthorData(string $scopus_id): bool|string
+    public function loadAuthorData(string $scopus_id): bool
     {
-        $this->scopus_id = $scopus_id;
-        $result = $this->loadPub($scopus_id);
-
-        if ($result !== true) {
-            return $result;
-        }
-
-        return true;
-    }
-
-    private function loadPub(string $scopus_id): bool
-    {
+        $this->$scopus_id = $scopus_id;
         $query = "AU-ID({$scopus_id})";
         $start = 0;
         $count = 25;

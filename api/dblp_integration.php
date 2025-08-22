@@ -16,7 +16,7 @@ function searchDBLPByAuthor(string $name, string $surname)
     } catch (Exception $e) {
     }
 
-    return $all_publications;
+    return filterDBLPPublications($all_publications);
 }
 
 function makeDBLPRequest($query, $max_results = 200)
