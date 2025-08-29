@@ -74,166 +74,164 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <nav>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container">
-            <a href="../index.php">
-                Home
+            <a class="navbar-brand fw-bold text-primary nav-tabs" href="../index.php">
+                DocRanks
             </a>
-            <span class="text-muted">|</span>
-            <a href="index.php">
-                Cerca Autore
-            </a>
-            <span class="text-muted">|</span>
-            <a href="aggiungi.php" class="fw-bold text-primary">
-                Aggiungi Autore
-            </a>
-            <span class="text-muted">|</span>
-            <a href="../../reset_and_init.php">
-                Reset Database
-            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav nav-tabs">
+                    <a class="nav-link" href="index.php">
+                        Cerca Autore
+                    </a>
+                    <a class="nav-link active" aria-current="page" href="aggiungi.php" class="fw-bold text-primary">
+                        Aggiungi Autore
+                    </a>
+                    <a class="nav-link" href="../../reset_and_init.php">
+                        Reset Database
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
-    <main>
-        <h1>DocRanks - Aggiungi Nuovo Autore</h1>
+    <div class="container">
+        <main>
+            <h1 class="container">DocRanks - Aggiungi Nuovo Autore</h1>
 
-        <section class="card mb-3">
-            <h2 class="card-header">Importa Autore da Scopus e DBLP</h2>
+            <section class="card mb-3">
+                <h2 class="card-header">Importa Autore da Scopus e DBLP</h2>
 
-            <form method="post" class="form-inline mb-3 card-body">
-                <div class="form-group row">
-                    <label for="scopus_id" class="col-sm-2 col-form-label">Scopus ID dell'autore (obbligatorio):</label>
-                    <div class="col-sm-2">
-                        <input type="text"
-                            class="form-control"
-                            id="scopus_id"
-                            name="scopus_id"
-                            value="<?php echo htmlspecialchars($scopus_id); ?>"
-                            placeholder="Es: 57193867382"
-                            pattern="[0-9]+"
-                            required>
+                <form method="post" class="form-inline mb-3 card-body">
+                    <div class="container form-group row">
+                        <label for="scopus_id" class="col-sm-2 col-form-label">Scopus ID dell'autore:</label>
+                        <div class="col-sm-10">
+                            <input type="text"
+                                class="form-control"
+                                id="scopus_id"
+                                name="scopus_id"
+                                value="<?php echo htmlspecialchars($scopus_id); ?>"
+                                placeholder="Es: 57193867382"
+                                pattern="[0-9]+"
+                                required>
+                        </div>
                     </div>
-                </div>
-                <div id="name-fields" class="form-group row mb-3">
-                    <div class="col-sm-2">
-                        <label class="col-form-label" for="name">Nome autore:</label>
-                    </div>
-                    <div class="col-sm-4">
+                    <div id="name-fields" class="container form-group row mb-3">
+                        <label class="col-form-label col-sm-2" for="name">Nome autore:</label>
                         <input class="form-control" type="text" id="name" name="name" value="<?php echo htmlspecialchars($name); ?>" placeholder="Es: Mario">
-                    </div>
-                    <div class="col-sm-2">
-                        <label class="col-form-label" for="surname">Cognome autore:</label>
-                    </div>
-                    <div class="col-sm-4">
+                        <label class="col-form-label col-sm-2" for="surname">Cognome autore:</label>
                         <input class="form-control" type="text" id="surname" name="surname" value="<?php echo htmlspecialchars($surname); ?>" placeholder="Es: Rossi">
                     </div>
-                </div>
 
-                <div id="pid-field" style="display: none;">
-                    <label for="dblp_pid">DBLP PID:</label>
-                    <input type="text" id="dblp_pid" name="dblp_pid" value="<?php echo htmlspecialchars($dblp_pid); ?>" placeholder="Es: 199/0048">
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="search_method" id="search_method1" value="name" checked>
-                    <label class="form-check-label" for="search_method1">
-                        Usa Nome e Cognome
-                    </label>
-                </div>
-                <div class=" form-check mb-3">
-                    <input class="form-check-input" type="radio" name="search_method" id="search_method2" value="pid">
-                    <label class="form-check-label" for="search_method2">
-                        Usa DBLP PID
-                    </label>
-                </div>
+                    <div id="pid-field" style="display: none;">
+                        <label for="dblp_pid">DBLP PID:</label>
+                        <input type="text" id="dblp_pid" name="dblp_pid" value="<?php echo htmlspecialchars($dblp_pid); ?>" placeholder="Es: 199/0048">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="search_method" id="search_method1" value="name" checked>
+                        <label class="form-check-label" for="search_method1">
+                            Usa Nome e Cognome
+                        </label>
+                    </div>
+                    <div class=" form-check mb-3">
+                        <input class="form-check-input" type="radio" name="search_method" id="search_method2" value="pid">
+                        <label class="form-check-label" for="search_method2">
+                            Usa DBLP PID
+                        </label>
+                    </div>
 
-                <script>
-                    function toggleFields() {
-                        const method = document.querySelector('input[name="search_method"]:checked').value;
-                        const nameFields = document.getElementById('name-fields');
-                        const pidField = document.getElementById('pid-field');
+                    <script>
+                        function toggleFields() {
+                            const method = document.querySelector('input[name="search_method"]:checked').value;
+                            const nameFields = document.getElementById('name-fields');
+                            const pidField = document.getElementById('pid-field');
 
-                        if (method === 'name') {
-                            nameFields.style.display = 'block';
-                            pidField.style.display = 'none';
-                            document.getElementById('name').required = true;
-                            document.getElementById('surname').required = true;
-                            document.getElementById('dblp_pid').required = false;
-                        } else {
-                            nameFields.style.display = 'none';
-                            pidField.style.display = 'block';
-                            document.getElementById('name').required = false;
-                            document.getElementById('surname').required = false;
-                            document.getElementById('dblp_pid').required = true;
+                            if (method === 'name') {
+                                nameFields.style.display = 'block';
+                                pidField.style.display = 'none';
+                                document.getElementById('name').required = true;
+                                document.getElementById('surname').required = true;
+                                document.getElementById('dblp_pid').required = false;
+                            } else {
+                                nameFields.style.display = 'none';
+                                pidField.style.display = 'block';
+                                document.getElementById('name').required = false;
+                                document.getElementById('surname').required = false;
+                                document.getElementById('dblp_pid').required = true;
+                            }
                         }
-                    }
 
-                    document.querySelectorAll('input[name="search_method"]').forEach(radio => {
-                        radio.addEventListener('change', toggleFields);
-                    });
+                        document.querySelectorAll('input[name="search_method"]').forEach(radio => {
+                            radio.addEventListener('change', toggleFields);
+                        });
 
-                    toggleFields();
-                </script>
+                        toggleFields();
+                    </script>
 
-                <button class="btn btn-primary" type="submit">Importa Autore</button>
-            </form>
-        </section>
-        <section class="card">
-            <h2 class="card-header">Importa da file JSON</h2>
-            <div class="card-body">
-                <p>Carica un file JSON con i dati degli autori da importare.</p>
-                <form method="post" enctype="multipart/form-data">
-                    <label for="json_file">Carica file JSON:</label>
-                    <input class="form-control-file" type="file" id="json_file" name="json_file" accept=".json" required>
-                    <button class="btn btn-primary" type="submit" name="upload_json">Importa da JSON</button>
+                    <button class="btn btn-primary" type="submit">Importa Autore</button>
                 </form>
+            </section>
+            <section class="card mb-3">
+                <h2 class="card-header">Importa da file JSON</h2>
+                <div class="card-body">
+                    <p>Carica un file JSON con i dati degli autori da importare.</p>
+                    <form method="post" enctype="multipart/form-data">
+                        <label for="json_file">Carica file JSON:</label>
+                        <input class="form-control-file" type="file" id="json_file" name="json_file" accept=".json" required>
+                        <button class="btn btn-primary" type="submit" name="upload_json">Importa da JSON</button>
+                    </form>
 
-                <details>
-                    <summary>Formato file JSON</summary>
-                    <pre>
+                    <details>
+                        <summary>Formato file JSON</summary>
+                        <pre>
 [
     {"scopus_id": "57193867382", "name": "Giovanni", "surname": "Delnevo"},  
     {"scopus_id": "55546765500", "name": "Roberto", "surname": "Girau"}
 ]
                 </pre>
-                </details>
-            </div>
-        </section>
-    </main>
-    <?php if ($result !== null): ?>
-        <section>
-            <?php if ($result): ?>
-
-                <div class="alert alert-success" role="alert">
-                    <h3 class="alert-heading">Importazione Completata</h3>
-
-                    <?php if ($scopus_id === "bulk_import"): ?>
-                        <p>Gli autori sono stati importati con successo nel database!</p>
-                        <a href="index.php" class="btn btn-success">Visualizza tutti gli autori</a>
-                    <?php else: ?>
-                        <p>L'autore è stato importato con successo nel database!</p>
-                        <a class="btn btn-success" href=" index.php?scopus_id=<?php echo urlencode($scopus_id); ?>">
-                            Visualizza Profilo Autore
-                        </a>
-                    <?php endif; ?>
+                    </details>
                 </div>
-            <?php else: ?>
-                <div class="alert alert-danger" role="alert">
-                    <p>Errore Importazione: l'api key non è stata riconosciuta nel file .env</p>
-                </div>
-            <?php endif; ?>
-        </section>
+            </section>
+        </main>
+        <?php if ($result !== null): ?>
+            <section>
+                <?php if ($result): ?>
 
-    <?php endif; ?>
+                    <div class="alert alert-success" role="alert">
+                        <h3 class="alert-heading">Importazione Completata</h3>
 
-    <aside>
-        <h3>Come funziona l'importazione</h3>
+                        <?php if ($scopus_id === "bulk_import"): ?>
+                            <p>Gli autori sono stati importati con successo nel database!</p>
+                            <a href="index.php" class="btn btn-success">Visualizza tutti gli autori</a>
+                        <?php else: ?>
+                            <p>L'autore è stato importato con successo nel database!</p>
+                            <a class="btn btn-success" href=" index.php?scopus_id=<?php echo urlencode($scopus_id); ?>">
+                                Visualizza Profilo Autore
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert-danger" role="alert">
+                        <p>Errore Importazione: l'api key non è stata riconosciuta nel file .env</p>
+                    </div>
+                <?php endif; ?>
+            </section>
 
-        <p>Il sistema importa automaticamente:</p>
-        <ul>
-            <li><strong>Da Scopus:</strong> Dati autore, pubblicazioni con citazioni</li>
-            <li><strong>Da DBLP:</strong> Elenco completo pubblicazioni con DOI</li>
-            <li><strong>Integrazione:</strong> Unisce i dati per creare un profilo completo</li>
-        </ul>
-    </aside>
+        <?php endif; ?>
+
+        <aside>
+            <h3>Come funziona l'importazione</h3>
+
+            <p>Il sistema importa automaticamente:</p>
+            <ul>
+                <li><strong>Da Scopus:</strong> Dati autore, pubblicazioni con citazioni</li>
+                <li><strong>Da DBLP:</strong> Elenco completo pubblicazioni con DOI</li>
+                <li><strong>Integrazione:</strong> Unisce i dati per creare un profilo completo</li>
+            </ul>
+        </aside>
+    </div>
     <?php echo $bootstrap_js; ?>
 </body>
 

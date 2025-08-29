@@ -30,213 +30,221 @@ handleHIndexUpdate($mysqli, $scopus_id);
 </head>
 
 <body>
-    <nav>
-        <div class="container">
-            <a href="..">
-                Home
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class=" container">
+            <a class="navbar-brand fw-bold text-primary nav-tabs" href="..">
+                DocRanks
             </a>
-            <span class="text-muted">|</span>
-            <a href="" class="fw-bold text-primary">
-                Cerca Autore
-            </a>
-            <span class="text-muted">|</span>
-            <a href="aggiungi.php">
-                Aggiungi Autore
-            </a>
-            <span class="text-muted">|</span>
-            <a href="../../reset_and_init.php">
-                Reset Database
-            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav nav-tabs">
+                    <a href="" class="nav-link active" aria-current="page">
+                        Cerca Autore
+                    </a>
+                    <a class="nav-link" href="aggiungi.php">
+                        Aggiungi Autore
+                    </a>
+                    <a class="nav-link" href="../../reset_and_init.php">
+                        Reset Database
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
+    <div class="container">
 
-    <h1>DocRanks - Profilo Autore</h1>
+        <h1>DocRanks - Profilo Autore</h1>
 
-    <?php include '../../includes/search_bar.php'; ?>
+        <?php include '../../includes/search_bar.php'; ?>
 
-    <?php if ($author_exists): ?>
-        <?php $author = $authorRepository->getProfile(); ?>
-        <main>
-            <h2>Profilo Completo</h2>
+        <?php if ($author_exists): ?>
+            <?php $author = $authorRepository->getProfile(); ?>
+            <main class="mt-3">
+                <h2>Profilo Completo</h2>
 
-            <section>
-                <h3>Informazioni Generali</h3>
-                <table class="table table-hover">
-                    <tr>
-                        <th>Campo</th>
-                        <th>Valore</th>
-                    </tr>
-                    <tr>
-                        <td><strong>Nome Completo</strong></td>
-                        <td><?php echo htmlspecialchars($author['nome'] . ' ' . $author['cognome']); ?></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Scopus ID</strong></td>
-                        <td><?php echo htmlspecialchars($author['scopus_id']); ?></td>
-                    </tr>
-                    <tr>
-                        <td><strong>H-Index</strong></td>
-                        <td>
-                            <div id="edit_hindex_<?php echo md5($author['scopus_id']); ?>" style="display: inline;">
-                                <span><?php echo $author['h_index'] ?? 'Non impostato'; ?></span>
-                                <button type="button" class="btn-edit">Modifica</button>
-                            </div>
-
-                            <div id="form_hindex_<?php echo md5($author['scopus_id']); ?>" style="display: none;">
-                                <form method="post" style="display: inline;">
-                                    <label for="hindex_input_<?php echo md5($author['scopus_id']); ?>">H-Index</label>
-                                    <input type="number" step="0.1" name="new_hindex"
-                                        id="hindex_input_<?php echo $id_suffix; ?>"
-                                        value="<?php echo htmlspecialchars($author['h_index'] ?? ''); ?>"
-                                        placeholder="H-Index">
-                                    <button type="submit" name="update_hindex">Salva</button>
-                                    <button type="button" class="btn-cancel">Annulla</button>
-                                </form>
-                                <br><small>Inserisci il valore H-Index o lascia vuoto per rimuovere</small>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Totale Documenti</strong></td>
-                        <td><?php echo htmlspecialchars($author['numero_documenti']); ?></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Totale Citazioni</strong></td>
-                        <td><?php echo htmlspecialchars($author['numero_citazioni']); ?></td>
-                    </tr>
-                </table>
-            </section>
-
-            <section>
-                <h3>Panoramica Pubblicazioni</h3>
-
-                <?php
-                $articles_stats = $authorRepository->getArticlesStats();
-                $papers_stats = $authorRepository->getConferencePapersStats();
-                $total_articles = $articles_stats['total'];
-                $total_papers = $papers_stats['total'];
-                $total_cit_articles = $articles_stats['total_citations'];
-                $total_cit_papers = $papers_stats['total_citations'];
-                ?>
-
-                <table class="table table-hover">
-                    <tr>
-                        <th>Tipo Pubblicazione</th>
-                        <th>Numero</th>
-                        <th>Citazioni Totali</th>
-                        <th>Media Citazioni</th>
-                        <th>Azioni</th>
-                    </tr>
-                    <tr>
-                        <td><strong>Journal Articles</strong></td>
-                        <td><?php echo $total_articles; ?></td>
-                        <td><?php echo $total_cit_articles; ?></td>
-                        <td><?php echo $total_articles > 0 ? round($total_cit_articles / $total_articles, 2) : 0; ?></td>
-                        <td>
-                            <?php if ($total_articles > 0): ?>
-                                <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza Dettagli</a>
-                            <?php else: ?>
-                                <em>Nessun articolo</em>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Conference Papers</strong></td>
-                        <td><?php echo $total_papers; ?></td>
-                        <td><?php echo $total_cit_papers; ?></td>
-                        <td><?php echo $total_papers > 0 ? round($total_cit_papers / $total_papers, 2) : 0; ?></td>
-                        <td>
-                            <?php if ($total_papers > 0): ?>
-                                <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza Dettagli</a>
-                            <?php else: ?>
-                                <em>Nessun conference paper</em>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                </table>
-            </section>
-
-            <?php $year_information = $authorRepository->getYearlyStats(); ?>
-            <?php if (!empty($year_information)): ?>
-                <section>
-                    <h3>Informazioni per Anno</h3>
-
+                <section class="container">
+                    <h3>Informazioni Generali</h3>
                     <table class="table table-hover">
                         <tr>
-                            <th>Anno</th>
-                            <th>Documenti</th>
-                            <th>Citazioni</th>
-                            <th>Media Citazioni per Documento</th>
+                            <th>Campo</th>
+                            <th>Valore</th>
                         </tr>
-                        <?php foreach ($year_information as $info): ?>
-                            <tr>
-                                <td><?php echo $info['anno']; ?></td>
-                                <td><?php echo $info['documenti']; ?></td>
-                                <td><?php echo $info['citazioni']; ?></td>
-                                <td><?php echo $info['documenti'] > 0 ? round($info['citazioni'] / $info['documenti'], 2) : 0; ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </table>
-                </section>
-            <?php endif; ?>
-        </main>
-        <section class="card">
-            <h3 class="card-header">Azioni</h3>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <a class="card-link" href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Conference Papers</a><br>
-                </li>
-                <li class="list-group-item">
-                    <a class="card-link" href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Journal Articles</a><br>
-                </li>
-                <li class="list-group-item">
-                    <a class="card-link" href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutte le Altre Pubblicazioni</a><br>
-                <li class="list-group-item">
-                    <a class="card-link" href="aggiungi.php">Aggiungi altro autore</a>
-                </li>
-            </ul>
-        </section>
-
-    <?php elseif (!empty($scopus_id)): ?>
-        <h3>Autore Non Trovato</h3>
-        <p>L'autore con Scopus ID <strong><?php echo htmlspecialchars($scopus_id); ?></strong> non è presente nel database.</p>
-        <p>
-            <a href="aggiungi.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Aggiungi questo autore al database</a>
-        </p>
-    <?php else: ?>
-        <main>
-            <h2>Tutti gli Autori</h2>
-
-            <?php
-            $authorsRepo = new AuthorsRepository($mysqli);
-            $authors = $authorsRepo->getAllAuthors();
-            ?>
-            <table class="table table-hover">
-                <caption>Elenco completo degli autori presenti nel database</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Cognome</th>
-                        <th scope="col">Scopus ID</th>
-                        <th scope="col">Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($authors as $author): ?>
                         <tr>
-                            <td><?= htmlspecialchars($author['nome']) ?></td>
-                            <td><?= htmlspecialchars($author['cognome']) ?></td>
-                            <td><?= htmlspecialchars($author['scopus_id']) ?></td>
+                            <td><strong>Nome Completo</strong></td>
+                            <td><?php echo htmlspecialchars($author['nome'] . ' ' . $author['cognome']); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scopus ID</strong></td>
+                            <td><?php echo htmlspecialchars($author['scopus_id']); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>H-Index</strong></td>
                             <td>
-                                <a href="?scopus_id=<?= urlencode($author['scopus_id']) ?>">Visualizza Profilo</a>
+                                <div id="edit_hindex_<?php echo md5($author['scopus_id']); ?>" style="display: inline;">
+                                    <span><?php echo $author['h_index'] ?? 'Non impostato'; ?></span>
+                                    <button type="button" class="btn-edit">Modifica</button>
+                                </div>
+
+                                <div id="form_hindex_<?php echo md5($author['scopus_id']); ?>" style="display: none;">
+                                    <form method="post" style="display: inline;">
+                                        <label for="hindex_input_<?php echo md5($author['scopus_id']); ?>">H-Index</label>
+                                        <input type="number" step="0.1" name="new_hindex"
+                                            id="hindex_input_<?php echo $id_suffix; ?>"
+                                            value="<?php echo htmlspecialchars($author['h_index'] ?? ''); ?>"
+                                            placeholder="H-Index">
+                                        <button type="submit" name="update_hindex">Salva</button>
+                                        <button type="button" class="btn-cancel">Annulla</button>
+                                    </form>
+                                    <br><small>Inserisci il valore H-Index o lascia vuoto per rimuovere</small>
+                                </div>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </main>
-    <?php endif; ?>
+                        <tr>
+                            <td><strong>Totale Documenti</strong></td>
+                            <td><?php echo htmlspecialchars($author['numero_documenti']); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Totale Citazioni</strong></td>
+                            <td><?php echo htmlspecialchars($author['numero_citazioni']); ?></td>
+                        </tr>
+                    </table>
+                </section>
 
+                <section>
+                    <h3>Panoramica Pubblicazioni</h3>
+
+                    <?php
+                    $articles_stats = $authorRepository->getArticlesStats();
+                    $papers_stats = $authorRepository->getConferencePapersStats();
+                    $total_articles = $articles_stats['total'];
+                    $total_papers = $papers_stats['total'];
+                    $total_cit_articles = $articles_stats['total_citations'];
+                    $total_cit_papers = $papers_stats['total_citations'];
+                    ?>
+
+                    <div class="container mb-3">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Tipo Pubblicazione</th>
+                                <th>Numero</th>
+                                <th>Citazioni Totali</th>
+                                <th>Media Citazioni</th>
+                                <th>Azioni</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Journal Articles</strong></td>
+                                <td><?php echo $total_articles; ?></td>
+                                <td><?php echo $total_cit_articles; ?></td>
+                                <td><?php echo $total_articles > 0 ? round($total_cit_articles / $total_articles, 2) : 0; ?></td>
+                                <td>
+                                    <?php if ($total_articles > 0): ?>
+                                        <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza Dettagli</a>
+                                    <?php else: ?>
+                                        <em>Nessun articolo</em>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Conference Papers</strong></td>
+                                <td><?php echo $total_papers; ?></td>
+                                <td><?php echo $total_cit_papers; ?></td>
+                                <td><?php echo $total_papers > 0 ? round($total_cit_papers / $total_papers, 2) : 0; ?></td>
+                                <td>
+                                    <?php if ($total_papers > 0): ?>
+                                        <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza Dettagli</a>
+                                    <?php else: ?>
+                                        <em>Nessun conference paper</em>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+
+                <?php $year_information = $authorRepository->getYearlyStats(); ?>
+                <?php if (!empty($year_information)): ?>
+                    <section>
+                        <h3>Informazioni per Anno</h3>
+
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Anno</th>
+                                <th>Documenti</th>
+                                <th>Citazioni</th>
+                                <th>Media Citazioni per Documento</th>
+                            </tr>
+                            <?php foreach ($year_information as $info): ?>
+                                <tr>
+                                    <td><?php echo $info['anno']; ?></td>
+                                    <td><?php echo $info['documenti']; ?></td>
+                                    <td><?php echo $info['citazioni']; ?></td>
+                                    <td><?php echo $info['documenti'] > 0 ? round($info['citazioni'] / $info['documenti'], 2) : 0; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </table>
+                    </section>
+                <?php endif; ?>
+            </main>
+            <section class="card">
+                <h3 class="card-header">Azioni</h3>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a class="card-link" href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Conference Papers</a><br>
+                    </li>
+                    <li class="list-group-item">
+                        <a class="card-link" href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutti i Journal Articles</a><br>
+                    </li>
+                    <li class="list-group-item">
+                        <a class="card-link" href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Visualizza tutte le Altre Pubblicazioni</a><br>
+                    <li class="list-group-item">
+                        <a class="card-link" href="aggiungi.php">Aggiungi altro autore</a>
+                    </li>
+                </ul>
+            </section>
+
+        <?php elseif (!empty($scopus_id)): ?>
+            <h3>Autore Non Trovato</h3>
+            <p>L'autore con Scopus ID <strong><?php echo htmlspecialchars($scopus_id); ?></strong> non è presente nel database.</p>
+            <p>
+                <a href="aggiungi.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Aggiungi questo autore al database</a>
+            </p>
+        <?php else: ?>
+            <main class="mt-3">
+                <h2>Tutti gli Autori</h2>
+
+                <?php
+                $authorsRepo = new AuthorsRepository($mysqli);
+                $authors = $authorsRepo->getAllAuthors();
+                ?>
+                <table class="table table-hover">
+                    <caption>Elenco completo degli autori presenti nel database</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Cognome</th>
+                            <th scope="col">Scopus ID</th>
+                            <th scope="col">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($authors as $author): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($author['nome']) ?></td>
+                                <td><?= htmlspecialchars($author['cognome']) ?></td>
+                                <td><?= htmlspecialchars($author['scopus_id']) ?></td>
+                                <td>
+                                    <a href="?scopus_id=<?= urlencode($author['scopus_id']) ?>">Visualizza Profilo</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </main>
+        <?php endif; ?>
+
+    </div>
 
     <?php renderEditingJavaScript(); ?>
 

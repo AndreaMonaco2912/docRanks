@@ -39,50 +39,51 @@ $other_publications = $othersRepo->getOthersDetails($scopus_id);
 
 <body>
     <?php renderNavigation($scopus_id, 'others'); ?>
+    <div class="container">
+        <?php renderPublicationHeader($author, $scopus_id, 'Altre Pubblicazioni'); ?>
 
-    <?php renderPublicationHeader($author, $scopus_id, 'Altre Pubblicazioni', '📚'); ?>
+        <main>
+            <h3>Elenco Altre Pubblicazioni</h3>
 
-    <main>
-        <h3>Elenco Altre Pubblicazioni</h3>
+            <?php if (empty($other_publications)): ?>
+                <p><em>Nessuna altra pubblicazione trovata per questo autore.</em></p>
+            <?php else: ?>
 
-        <?php if (empty($other_publications)): ?>
-            <p><em>Nessuna altra pubblicazione trovata per questo autore.</em></p>
-        <?php else: ?>
+                <?php foreach ($other_publications as $pub): ?>
+                    <article class="card mb-3">
+                        <h4 class="card-header"><?php echo htmlspecialchars($pub['titolo']); ?></h4>
 
-            <?php foreach ($other_publications as $pub): ?>
-                <article class="card mb-3">
-                    <h4 class="card-header"><?php echo htmlspecialchars($pub['titolo']); ?></h4>
+                        <table class="table table-hover card-body">
+                            <tr>
+                                <td><strong>DOI</strong></td>
+                                <td><?php echo htmlspecialchars($pub['DOI']); ?></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Anno</strong></td>
+                                <td><?php echo $pub['anno']; ?></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tipo</strong></td>
+                                <td><?php echo htmlspecialchars($pub['tipo']); ?></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Venue DBLP</strong></td>
+                                <td><?php echo htmlspecialchars($pub['dblp_venue']); ?></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Autori</strong></td>
+                                <td><?php echo htmlspecialchars($pub['nome_autori']); ?></td>
+                            </tr>
+                        </table>
+                    </article>
+                <?php endforeach; ?>
 
-                    <table class="table table-hover card-body">
-                        <tr>
-                            <td><strong>DOI</strong></td>
-                            <td><?php echo htmlspecialchars($pub['DOI']); ?></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Anno</strong></td>
-                            <td><?php echo $pub['anno']; ?></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tipo</strong></td>
-                            <td><?php echo htmlspecialchars($pub['tipo']); ?></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Venue DBLP</strong></td>
-                            <td><?php echo htmlspecialchars($pub['dblp_venue']); ?></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Autori</strong></td>
-                            <td><?php echo htmlspecialchars($pub['nome_autori']); ?></td>
-                        </tr>
-                    </table>
-                </article>
-            <?php endforeach; ?>
+            <?php endif; ?>
 
-        <?php endif; ?>
+        </main>
 
-    </main>
-
-    <?php renderActions($scopus_id, 'others'); ?>
+        <?php renderActions($scopus_id, 'others'); ?>
+    </div>
 
     <?php echo $bootstrap_js; ?>
 </body>

@@ -9,18 +9,13 @@ nav {
     margin-bottom: 2rem;
 }
 
+nav div div{
+    font-size: large;
+}
+
 nav a {
     color: #495057;
     text-decoration: none;
     margin: 1rem;
     font-weight: 500;
-}
-
-nav a:hover {
-    color: #007bff;
-}
-
-nav a[style*="font-weight: bold"] {
-    color: #007bff;
-    font-weight: 600;
 }

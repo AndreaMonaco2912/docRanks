@@ -3,36 +3,44 @@
 function renderNavigation($scopus_id, $current_page = '')
 {
 ?>
-    <nav>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container">
-            <a href="../../home/index.php">
-                Home
+            <a class="navbar-brand nav-tabs fw-bold text-primary" href="../../home/index.php">
+                DocRanks
             </a>
-            <span class="text-muted">|</span>
-            <a href="../index.php">
-                Cerca Autore
-            </a>
-            <span class="text-muted">|</span>
-            <a href="index.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
-                <?php echo $current_page === 'profile' ? 'class="fw-bold text-primary;"' : ''; ?>>Profilo Autore</a> |
-            <a href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
-                <?php echo $current_page === 'conferences' ? 'class="fw-bold text-primary;"' : ''; ?>>Conference Papers</a> |
-            <a href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
-                <?php echo $current_page === 'journals' ? 'class="fw-bold text-primary;"' : ''; ?>>Journal Articles</a> |
-            <a href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>"
-                <?php echo $current_page === 'others' ? 'class="fw-bold text-primary;"' : ''; ?>>Altre Pubblicazioni</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav nav-tabs">
+                    <a class="nav-link" href="index.php">Cerca Autore</a>
+
+                    <a class="nav-link<?php echo $current_page === 'profile' ? ' active' : ''; ?>"
+                        href="index.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Profilo Autore</a>
+
+                    <a class="nav-link<?php echo $current_page === 'conferences' ? ' active' : ''; ?>"
+                        href="conference_papers.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Conference Papers</a>
+
+                    <a class="nav-link<?php echo $current_page === 'journals' ? ' active' : ''; ?>"
+                        href="journal_articles.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Journal Articles</a>
+
+                    <a class="nav-link<?php echo $current_page === 'others' ? ' active' : ''; ?>"
+                        href="other_publications.php?scopus_id=<?php echo urlencode($scopus_id); ?>">Altre Pubblicazioni</a>
+                </div>
+            </div>
         </div>
     </nav>
 <?php
 }
 
-function renderPublicationHeader($author, $scopus_id, $title, $icon)
+function renderPublicationHeader($author, $scopus_id, $title)
 {
 ?>
-    <h1><?php echo $icon; ?> <?php echo $title; ?></h1>
-
-    <h2> <?php echo htmlspecialchars($author['nome'] . ' ' . $author['cognome']); ?></h2>
-    <p><strong>Scopus ID:</strong> <?php echo htmlspecialchars($scopus_id); ?></p>
+    <h1><?php echo $title; ?></h1>
+    <div class="card m-3">
+        <h2 class="card-header"> <?php echo htmlspecialchars($author['nome'] . ' ' . $author['cognome']); ?></h2>
+        <p class="card-body"><strong>Scopus ID:</strong> <?php echo htmlspecialchars($scopus_id); ?></p>
+    </div>
 <?php
 }
 

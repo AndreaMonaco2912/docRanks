@@ -20,7 +20,7 @@ class ScopusAuthorData
 
     public function loadAuthorData(string $scopus_id): bool
     {
-        $this->$scopus_id = $scopus_id;
+        $this->scopus_id = $scopus_id;
         $query = "AU-ID({$scopus_id})";
         $start = 0;
         $count = 25;
